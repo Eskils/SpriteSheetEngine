@@ -6,6 +6,6 @@
 //
 
 
-protocol ModelApplicable {
+protocol ModelApplicable: SpriteSheetOperation {
     var nodeID: String { get }
 }
