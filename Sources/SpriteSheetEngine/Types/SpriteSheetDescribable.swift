@@ -8,5 +8,4 @@
 protocol SpriteSheetDescribable {
     associatedtype Operation: SpriteSheetOperation
     var operations: [SpriteSheetAxis.Kind: [Operation]] { get }
-    var axes: Set<SpriteSheetAxis> { get }
 }
