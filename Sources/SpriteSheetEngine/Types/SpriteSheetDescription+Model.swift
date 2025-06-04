@@ -8,8 +8,8 @@
 extension SpriteSheetDescription {
     struct Model: SpriteSheetDescribable {
         var model: ModelKind
-        var camera: CameraSettings
-        var operations: [SpriteSheetAxis.Kind: [ModelOperation]]
-        var export: ExportSettings
+        var camera = CameraSettings()
+        var operations = [SpriteSheetAxis.Kind: [ModelOperation]]()
+        var export = ExportSettings()
     }
 }
