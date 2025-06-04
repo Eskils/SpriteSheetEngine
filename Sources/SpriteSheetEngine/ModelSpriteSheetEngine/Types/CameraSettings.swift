@@ -6,7 +6,24 @@
 //
 
 import simd
+import CoreGraphics
 
 struct CameraSettings {
     var transform = simd_float4x4(diagonal: .one)
+    var projection = ProjectionKind.perspective
+    var background = BackgroundKind.transparent
+}
+
+extension CameraSettings {
+    enum ProjectionKind {
+        case perspective
+        case orthographic
+    }
+}
+
+extension CameraSettings {
+    enum BackgroundKind {
+        case transparent
+        case color(CGColor)
+    }
 }
