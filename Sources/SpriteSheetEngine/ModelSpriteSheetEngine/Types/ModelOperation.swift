@@ -8,7 +8,7 @@
 import simd
 import CoreGraphics
 
-enum ModelOperation {
+enum ModelOperation: SpriteSheetOperation {
     case transform(Transform)
     case material(Material)
 }
