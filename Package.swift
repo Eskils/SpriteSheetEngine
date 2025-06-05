@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "SpriteSheetEngine",
-    platforms: [.macOS(.v11)],
+    platforms: [.macOS(.v12)],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
