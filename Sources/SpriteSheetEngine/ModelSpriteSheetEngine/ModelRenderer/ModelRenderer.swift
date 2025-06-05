@@ -10,7 +10,10 @@ import CoreGraphics
 protocol ModelRenderer {
     associatedtype Model
     
+    @MainActor
     func add(model: Model)
-    func configure(camera: CameraSettings)
-    func perform(operation: ModelOperation) async -> CGImage
+    @MainActor
+    func configure(camera: CameraSettings) async throws
+    @MainActor
+    func perform(operation: ModelOperation) async throws -> CGImage
 }
