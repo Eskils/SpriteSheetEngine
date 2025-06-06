@@ -18,7 +18,7 @@ struct ImageFileInterface {
         do {
             data = try Data(contentsOf: url)
         } catch {
-            throw .cannotReadContentsOfFile(url)
+            throw .cannotReadContentsOfFile(url, error)
         }
         
         guard let imageSource = CGImageSourceCreateWithData(data as CFData, nil) else {
@@ -42,12 +42,21 @@ struct ImageFileInterface {
         CGImageDestinationAddImage(imageDestination, image, nil)
         CGImageDestinationFinalize(imageDestination)
         
+        let directoryPath = URL(fileURLWithPath: path).deletingLastPathComponent().path()
+        if !FileManager.default.fileExists(atPath: directoryPath) {
+            do {
+                try FileManager.default.createDirectory(atPath: directoryPath, withIntermediateDirectories: true)
+            } catch {
+                throw .cannotMakeDirectory(directoryPath, error)
+            }
+        }
         data.write(toFile: path, atomically: true)
     }
 }
 
 enum ImageFileInterfaceError: Error {
-    case cannotReadContentsOfFile(URL)
+    case cannotReadContentsOfFile(URL, Error)
+    case cannotMakeDirectory(String, Error)
     case cannotMakeImageSource
     case cannotMakeCGImageFromData
     case cannotMakeImageDestination
