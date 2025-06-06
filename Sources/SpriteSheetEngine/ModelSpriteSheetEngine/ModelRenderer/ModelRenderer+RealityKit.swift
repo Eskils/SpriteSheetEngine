@@ -93,6 +93,20 @@ final class RealityKitModelRenderer: Sendable {
         }
         return node
     }
+    
+    @MainActor
+    private func meshNode(named name: String) throws(RealityKitModelRendererError) -> (Entity, ModelComponent) {
+        let node = try node(named: name)
+        if let component = node.components[ModelComponent.self] {
+            return (node, component)
+        }
+        for child in node.children {
+            if let component = child.components[ModelComponent.self] {
+                return (node, component)
+            }
+        }
+        throw .nodeDoesNotHaveMesh(id: name)
+    }
 }
 
 extension RealityKitModelRenderer: ModelRenderer {
@@ -123,7 +137,7 @@ extension RealityKitModelRenderer: ModelRenderer {
     }
     
     @MainActor
-    func perform(operation: ModelOperation) async throws(RealityKitModelRendererError) -> CGImage {
+    func perform(operation: ModelOperation) async throws -> CGImage {
         switch operation {
         case .none:
             break
@@ -131,10 +145,7 @@ extension RealityKitModelRenderer: ModelRenderer {
             let entity = try node(named: transform.nodeID)
             entity.transform.matrix = transform.matrix
         case .material(let material):
-            let entity = try node(named: material.nodeID)
-            guard var modelComponent = entity.components[ModelComponent.self] else {
-                throw .nodeDoesNotHaveMesh(id: material.nodeID)
-            }
+            var (entity, modelComponent) = try meshNode(named: material.nodeID)
             var meshMaterial = modelComponent.materials.first as? PhysicallyBasedMaterial ?? PhysicallyBasedMaterial()
             meshMaterial.baseColor = PhysicallyBasedMaterial.BaseColor(tint: NSColor(cgColor: material.color) ?? .magenta)
             if modelComponent.materials.count <= 1 {
@@ -142,6 +153,7 @@ extension RealityKitModelRenderer: ModelRenderer {
             } else {
                 modelComponent.materials.replaceSubrange(0..<1, with: [meshMaterial])
             }
+            entity.components[ModelComponent.self] = modelComponent
         }
         let image = try await snapshotNextFrame()
         return image
