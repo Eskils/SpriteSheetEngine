@@ -11,6 +11,7 @@ import CoreGraphics
 enum ModelOperation: SpriteSheetOperation {
     case transform(Transform)
     case material(Material)
+    case none
 }
 
 extension ModelOperation {

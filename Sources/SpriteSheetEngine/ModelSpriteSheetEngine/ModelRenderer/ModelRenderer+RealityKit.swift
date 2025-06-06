@@ -117,6 +117,8 @@ extension RealityKitModelRenderer: ModelRenderer {
     @MainActor
     func perform(operation: ModelOperation) async throws(RealityKitModelRendererError) -> CGImage {
         switch operation {
+        case .none:
+            break
         case .transform(let transform):
             let entity = try node(named: transform.nodeID)
             entity.transform.matrix = transform.matrix
