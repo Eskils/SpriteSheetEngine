@@ -7,7 +7,7 @@
 
 import RealityKit
 import AppKit
-import Combine
+@preconcurrency import Combine
 
 final class RealityKitModelRenderer: Sendable {
     @MainActor
@@ -20,8 +20,11 @@ final class RealityKitModelRenderer: Sendable {
     init() {
         let arView = ARView()
         self.sceneUpdateIterator = AsyncStream { continuation in
-            let _ = arView.scene.subscribe(to: SceneEvents.Update.self) { event in
+            let cancellable = arView.scene.subscribe(to: SceneEvents.Update.self) { event in
                 continuation.yield(event)
+            }
+            continuation.onTermination = { _ in
+                cancellable.cancel()
             }
         }
         self.arView = arView
