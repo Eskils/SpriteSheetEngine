@@ -17,8 +17,8 @@ final class RealityKitModelRenderer: Sendable {
     private let sceneUpdateIterator: AsyncStream<SceneEvents.Update>
     
     @MainActor
-    init() {
-        let arView = ARView()
+    init(size: CGSize = CGSize(width: 1024, height: 1024)) {
+        let arView = ARView(frame: NSRect(origin: .zero, size: size))
         self.sceneUpdateIterator = AsyncStream { continuation in
             let cancellable = arView.scene.subscribe(to: SceneEvents.Update.self) { event in
                 continuation.yield(event)
@@ -58,6 +58,11 @@ final class RealityKitModelRenderer: Sendable {
         do {
             return try await withCheckedThrowingContinuation { continuation in
                 DispatchQueue.main.async {
+                    let size = self.arView.frame.size
+                    guard size.width > 0 && size.height > 0 else {
+                        continuation.resume(throwing: RealityKitModelRendererError.invalidRendererSize(size: size))
+                        return
+                    }
                     self.arView.snapshot(saveToHDR: false) { image in
                         guard let image else {
                             continuation.resume(throwing: RealityKitModelRendererError.cannotCaptureSceneToImage)
@@ -146,6 +151,7 @@ extension RealityKitModelRenderer: ModelRenderer {
 enum RealityKitModelRendererError: Error {
     case orthographicCameraRequiresMacOS15
     case cannotCaptureSceneToImage
+    case invalidRendererSize(size: CGSize)
     case cannotConvertToCoreGraphicsImage
     case cannotFindNodeWithID(id: String)
     case nodeDoesNotHaveMesh(id: String)
