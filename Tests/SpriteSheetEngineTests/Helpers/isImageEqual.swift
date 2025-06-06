@@ -7,7 +7,7 @@
 
 import CoreGraphics
 
-private func isImageEqual(original imagePath: String, transformed producedOutputPath: String, expected expectedImagePath: String, afterPerformingImageOperations block: (CGImage) throws -> CGImage) throws -> Bool {
+func isImageEqual(original imagePath: String, transformed producedOutputPath: String, expected expectedImagePath: String, afterPerformingImageOperations block: (CGImage) throws -> CGImage) throws -> Bool {
     let inputImage = try ImageFileInterface.image(atPath: imagePath)
     let processedImage = try block(inputImage)
     
@@ -18,12 +18,15 @@ private func isImageEqual(original imagePath: String, transformed producedOutput
     return try isImageEqual(actual: processedImage, expected: expectedImage)
 }
 
-private func isImageEqual(actual: CGImage, expected expectedImagePath: String) throws -> Bool {
+func isImageEqual(actual: CGImage, transformed producedOutputPath: String? = nil, expected expectedImagePath: String) throws -> Bool {
+    if let producedOutputPath {
+        try ImageFileInterface.write(image: actual, toPath: producedOutputPath)
+    }
     let expectedImage = try ImageFileInterface.image(atPath: expectedImagePath)
     return try isImageEqual(actual: actual, expected: expectedImage)
 }
 
-private func isImageEqual(actual: CGImage, expected: CGImage) throws -> Bool {
+func isImageEqual(actual: CGImage, expected: CGImage) throws -> Bool {
     let colorspace = CGColorSpaceCreateDeviceRGB()
     let convertedProcessed = convertColorspace(ofImage: actual, toColorSpace: colorspace)
     let convertedExpected = convertColorspace(ofImage: expected, toColorSpace: colorspace)
