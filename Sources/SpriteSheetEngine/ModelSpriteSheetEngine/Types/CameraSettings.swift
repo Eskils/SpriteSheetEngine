@@ -9,7 +9,14 @@ import simd
 import CoreGraphics
 
 struct CameraSettings {
-    var transform = simd_float4x4(diagonal: .one)
+    var transform = simd_float4x4(
+        rows: [
+            SIMD4(1, 0, 0, 0),
+            SIMD4(0, 1, 0, 0),
+            SIMD4(0, 0, 1, 2),
+            SIMD4(0, 0, 0, 1),
+        ]
+    )
     var projection = ProjectionKind.perspective
     var background = BackgroundKind.transparent
 }
