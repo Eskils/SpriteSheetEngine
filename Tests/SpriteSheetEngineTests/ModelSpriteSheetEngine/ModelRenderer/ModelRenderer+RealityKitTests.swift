@@ -72,6 +72,64 @@ struct ModelRendererRealityKitTests {
     
     @Test
     @MainActor
+    func appliesCameraTransform() async throws {
+        try await assertSnapshot(name: "Camera transform") { renderer in
+            let cameraSettings = CameraSettings(
+                transform: simd_float4x4(rows: [
+                    SIMD4(1, 0, 0, 0),
+                    SIMD4(0, 1, 0, 0),
+                    SIMD4(0, 0, 1, 5),
+                    SIMD4(0, 0, 0, 1),
+                ])
+            )
+            try await renderer.configure(camera: cameraSettings)
+            renderer.add(model: try load(model: modelPath))
+            return try await renderer.perform(operation: .none)
+        }
+    }
+    
+    @Test
+    @MainActor
+    func usesLatestCameraSetting() async throws {
+        let renderer = RealityKitModelRenderer(size: rendererSize)
+        let firstCameraSettings = CameraSettings(
+            transform: simd_float4x4(rows: [
+                SIMD4(1, 0, 0, 0),
+                SIMD4(0, 1, 0, 0),
+                SIMD4(0, 0, 1, 5),
+                SIMD4(0, 0, 0, 1),
+            ])
+        )
+        let secondCameraSettings = CameraSettings(
+            transform: simd_float4x4(rows: [
+                SIMD4(1, 0, 0, 0),
+                SIMD4(0, 1, 0, 0),
+                SIMD4(0, 0, 1, 10),
+                SIMD4(0, 0, 0, 1),
+            ])
+        )
+        try await renderer.configure(camera: firstCameraSettings)
+        #expect(renderer.cameraTransform.columns.3.z == 5)
+        
+        try await renderer.configure(camera: secondCameraSettings)
+        #expect(renderer.cameraTransform.columns.3.z == 10)
+    }
+    
+    @Test
+    @MainActor
+    func appliesOrthographicCameraProjection() async throws {
+        try await assertSnapshot(name: "Orthographic camera projection") { renderer in
+            let cameraSettings = CameraSettings(
+                projection: .orthographic
+            )
+            try await renderer.configure(camera: cameraSettings)
+            renderer.add(model: try load(model: modelPath))
+            return try await renderer.perform(operation: .none)
+        }
+    }
+    
+    @Test
+    @MainActor
     func appliesCameraBackground() async throws {
         try await assertSnapshot(name: "Camera background") { renderer in
             let cameraSettings = CameraSettings(
