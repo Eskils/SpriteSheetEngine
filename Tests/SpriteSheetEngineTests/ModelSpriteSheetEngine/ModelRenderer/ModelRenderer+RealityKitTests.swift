@@ -69,6 +69,19 @@ struct ModelRendererRealityKitTests {
             )
         }
     }
+    
+    @Test
+    @MainActor
+    func appliesCameraBackground() async throws {
+        try await assertSnapshot(name: "Camera background") { renderer in
+            let cameraSettings = CameraSettings(
+                background: .color(.init(red: 0.4, green: 0.2, blue: 0.8, alpha: 1.0))
+            )
+            try await renderer.configure(camera: cameraSettings)
+            renderer.add(model: try load(model: modelPath))
+            return try await renderer.perform(operation: .none)
+        }
+    }
 }
 
 private extension ModelRendererRealityKitTests {
