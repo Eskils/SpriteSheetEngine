@@ -15,6 +15,8 @@ final class RealityKitModelRenderer: Sendable {
     @MainActor
     private var camera: Entity?
     private let sceneUpdateIterator: AsyncStream<SceneEvents.Update>
+    @MainActor
+    private let rootNode = AnchorEntity(world: .zero)
     
     @MainActor
     init(size: CGSize = CGSize(width: 1024, height: 1024)) {
@@ -28,6 +30,12 @@ final class RealityKitModelRenderer: Sendable {
             }
         }
         self.arView = arView
+        scene.addAnchor(rootNode)
+    }
+    
+    @MainActor
+    var cameraTransform: simd_float4x4 {
+        arView.cameraTransform.matrix
     }
     
     @MainActor
@@ -112,9 +120,7 @@ final class RealityKitModelRenderer: Sendable {
 extension RealityKitModelRenderer: ModelRenderer {
     @MainActor
     func add(model: Entity) {
-        let anchorEntity = AnchorEntity(world: .zero)
-        anchorEntity.addChild(model)
-        scene.addAnchor(anchorEntity)
+        rootNode.addChild(model)
     }
     
     @MainActor
@@ -126,7 +132,7 @@ extension RealityKitModelRenderer: ModelRenderer {
             arView.environment.background = .color(.clear)
         }
         
-        self.camera = switch camera.projection {
+        let cameraEntity = switch camera.projection {
         case .orthographic: if #available(macOS 15.0, *) {
             orthographicCamera(transform: camera.transform)
         } else {
@@ -134,6 +140,10 @@ extension RealityKitModelRenderer: ModelRenderer {
         }
         case .perspective: perspectiveCamera(transform: camera.transform)
         }
+        
+        self.camera?.removeFromParent()
+        add(model: cameraEntity)
+        self.camera = cameraEntity
     }
     
     @MainActor
