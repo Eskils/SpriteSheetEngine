@@ -33,21 +33,21 @@ extension ColorDTO: Codable {
         case string.starts(with: "#"):
             let hexString = string[string.index(string.startIndex, offsetBy: 1)..<string.endIndex]
             guard let hex = Int(hexString, radix: 16) else {
-                throw ColorDTODecoderError.cannotParseStringAsHex(string)
+                throw DecoderError.cannotParseStringAsHex(string)
             }
             self = .hex(hex)
         case string.count == 6:
             guard let hex = Int(string, radix: 16) else {
-                throw ColorDTODecoderError.cannotParseStringAsHex(string)
+                throw DecoderError.cannotParseStringAsHex(string)
             }
             self = .hex(hex)
-        default: throw ColorDTODecoderError.cannotParseStringIntoColor(string)
+        default: throw DecoderError.cannotParseStringIntoColor(string)
         }
     }
     
     private static let transparentKey = "transparent"
     
-    enum ColorDTODecoderError: Error {
+    enum DecoderError: Error {
         case cannotParseStringIntoColor(String)
         case cannotParseStringAsHex(String)
     }
