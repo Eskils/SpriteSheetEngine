@@ -7,6 +7,7 @@
 
 protocol SpriteSheetDescribable {
     associatedtype Operation: SpriteSheetOperation
-    var operations: [SpriteSheetAxis.Kind: [Operation]] { get }
+    var operations: [Operation] { get }
+    var numberOfColumns: Int { get }
     var export: ExportSettings { get }
 }

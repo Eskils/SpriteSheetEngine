@@ -9,7 +9,8 @@ extension SpriteSheetDescription {
     struct Model: SpriteSheetDescribable {
         var model: ModelKind
         var camera = CameraSettings()
-        var operations = [SpriteSheetAxis.Kind: [ModelOperation]]()
+        var operations = [ModelOperation]()
+        var numberOfColumns = Int.max
         var export = ExportSettings()
     }
 }
