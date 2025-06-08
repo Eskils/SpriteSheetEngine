@@ -29,7 +29,7 @@ extension CameraSettings {
 }
 
 extension CameraSettings {
-    enum BackgroundKind {
+    enum BackgroundKind: Equatable {
         case transparent
         case color(CGColor)
     }
