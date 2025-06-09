@@ -95,4 +95,19 @@ struct ColorDTOTests {
         let dto = ColorDTO(model: model)
         #expect(dto == .transparent)
     }
+    
+    @Test
+    func backgroundKindToHex() throws {
+        let model = CGColor(red: 170.0 / 255, green: 187.0 / 255, blue: 204.0 / 255, alpha: 1)
+        let backgroundKind = CameraSettings.BackgroundKind.color(model)
+        let dto = ColorDTO(backgroundKind: backgroundKind)
+        #expect(dto == .hex(0xAABBCC))
+    }
+    
+    @Test
+    func backgroundKindToTransparent() throws {
+        let backgroundKind = CameraSettings.BackgroundKind.transparent
+        let dto = ColorDTO(backgroundKind: backgroundKind)
+        #expect(dto == .transparent)
+    }
 }

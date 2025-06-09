@@ -96,4 +96,11 @@ extension ColorDTO: DataTransferObject {
         let hex = red << 16 + green << 8 + blue << 0
         self = .hex(hex)
     }
+    
+    init(backgroundKind: CameraSettings.BackgroundKind) {
+        switch backgroundKind {
+        case .transparent: self = .transparent
+        case .color(let color): self.init(model: color)
+        }
+    }
 }
