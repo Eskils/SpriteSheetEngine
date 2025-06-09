@@ -11,6 +11,9 @@ struct CameraSettingsDTO {
     var background: ColorDTO?
 }
 
+extension CameraSettingsDTO: Equatable {
+}
+
 extension CameraSettingsDTO: Codable {
 }
 

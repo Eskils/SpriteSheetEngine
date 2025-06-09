@@ -21,6 +21,9 @@ struct CameraSettings {
     var background = BackgroundKind.transparent
 }
 
+extension CameraSettings: Equatable {
+}
+
 extension CameraSettings {
     enum ProjectionKind {
         case perspective
