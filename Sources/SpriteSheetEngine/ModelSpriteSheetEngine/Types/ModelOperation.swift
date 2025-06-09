@@ -25,3 +25,19 @@ extension ModelOperation {
         var color: CGColor
     }
 }
+
+extension ModelOperation {
+    enum Kind: String, Codable, Hashable {
+        case transform
+        case material
+        case none
+    }
+    
+    var kind: Kind {
+        switch self {
+        case .transform: .transform
+        case .material: .material
+        case .none: .none
+        }
+    }
+}
