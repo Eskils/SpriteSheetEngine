@@ -6,7 +6,7 @@
 //
 
 extension ModelOperation {
-    struct TransformDTO: ModelOperationDTO {
+    struct TransformDTO: ModelOperationDTORepresentable {
         var type: ModelOperation.Kind
         var nodeID: String
         var matrix: Matrix4x4DTO

@@ -6,7 +6,7 @@
 //
 
 extension ModelOperation {
-    struct MaterialDTO: ModelOperationDTO {
+    struct MaterialDTO: ModelOperationDTORepresentable {
         var type: ModelOperation.Kind
         var nodeID: String
         var color: ColorDTO
