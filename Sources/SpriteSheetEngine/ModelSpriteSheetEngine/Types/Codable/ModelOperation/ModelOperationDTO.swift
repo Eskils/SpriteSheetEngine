@@ -11,6 +11,9 @@ enum ModelOperationDTO {
     case none
 }
 
+extension ModelOperationDTO: Equatable {
+}
+
 extension ModelOperationDTO: Codable {
     func encode(to encoder: any Encoder) throws {
         switch self {

@@ -14,6 +14,9 @@ enum ModelOperation: SpriteSheetOperation {
     case none
 }
 
+extension ModelOperation: Equatable {
+}
+
 extension ModelOperation {
     struct Transform: ModelApplicable {
         var nodeID: String
