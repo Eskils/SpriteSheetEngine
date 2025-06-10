@@ -8,17 +8,8 @@
 import CoreGraphics
 
 struct ExportSettings {
-    let sizeMode = SizeMode.natural
-    let format = FormatKind.image
-}
-
-extension ExportSettings {
-    enum SizeMode {
-        /// The smallest fitting square
-        case square
-        /// The default output by the rendering engine
-        case natural
-    }
+    var size = CGSize(width: 128, height: 128)
+    var format = FormatKind.image
 }
 
 extension ExportSettings {
