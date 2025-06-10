@@ -18,24 +18,6 @@ extension ModelOperation: Equatable {
 }
 
 extension ModelOperation {
-    struct Transform: ModelApplicable {
-        var nodeID: String
-        var matrix = simd_float4x4(diagonal: .one)
-    }
-    
-    struct Material: ModelApplicable {
-        var nodeID: String
-        var color: CGColor
-    }
-}
-
-extension ModelOperation.Transform: Equatable {
-}
-
-extension ModelOperation.Material: Equatable {
-}
-
-extension ModelOperation {
     enum Kind: String, Codable, Hashable {
         case transform
         case material
