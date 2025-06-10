@@ -13,6 +13,9 @@ extension ModelOperation {
     }
 }
 
+extension ModelOperation.MaterialDTO: Equatable {
+}
+
 extension ModelOperation.MaterialDTO: Codable {
 }
 

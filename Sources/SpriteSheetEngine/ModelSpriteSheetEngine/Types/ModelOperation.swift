@@ -29,6 +29,9 @@ extension ModelOperation {
 extension ModelOperation.Transform: Equatable {
 }
 
+extension ModelOperation.Material: Equatable {
+}
+
 extension ModelOperation {
     enum Kind: String, Codable, Hashable {
         case transform
