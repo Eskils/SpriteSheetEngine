@@ -13,6 +13,9 @@ extension ModelOperation {
     }
 }
 
+extension ModelOperation.TransformDTO: Equatable {
+}
+
 extension ModelOperation.TransformDTO: Codable {
 }
 
