@@ -31,6 +31,22 @@ struct ProjectionKindDTOTests {
     }
     
     @Test
+    func encodeOrthographic() throws {
+        let dto = ProjectionKindDTO.orthographic
+        let encoded = try encoder.encode(dto)
+        let string = String(data: encoded, encoding: .utf8)
+        #expect(string == "\"orthographic\"")
+    }
+    
+    @Test
+    func decodeOrthographic() throws {
+        let string = "\"orthographic\""
+        let encoded = string.data(using: .utf8)!
+        let dto = try decoder.decode(ProjectionKindDTO.self, from: encoded)
+        #expect(dto == .orthographic)
+    }
+    
+    @Test
     func perspectiveToModel() throws {
         let dto = ProjectionKindDTO.perspective
         let projection = dto.toModel()
