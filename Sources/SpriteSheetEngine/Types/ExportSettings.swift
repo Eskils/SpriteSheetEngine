@@ -13,6 +13,9 @@ struct ExportSettings {
     var format = ImageFormat.png
 }
 
+extension ExportSettings: Equatable {
+}
+
 extension ExportSettings {
     enum FormatKind {
         case image
