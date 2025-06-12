@@ -5,8 +5,16 @@
 //  Created by Eskil Gjerde Sviggum on 08/06/2025.
 //
 
-protocol DataTransferObject: Codable {
+protocol DataTransferModelable: Decodable {
     associatedtype Model
-    func toModel() -> Model
+    associatedtype Failure: Error
+    func toModel() throws(Failure) -> Model
+}
+
+protocol DataTransferTransferable: Decodable {
+    associatedtype Model
     init(model: Model)
+}
+
+protocol DataTransferObject: DataTransferModelable, DataTransferTransferable {
 }
