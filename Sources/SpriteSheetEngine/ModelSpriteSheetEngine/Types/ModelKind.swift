@@ -13,5 +13,24 @@ enum ModelKind {
     case sceneKit(SCNScene)
 }
 
+extension ModelKind {
+    enum Kind {
+        case realityKit
+        case sceneKit
+    }
+    
+    var kind: Kind {
+        switch self {
+        case .realityKit:
+            .realityKit
+        case .sceneKit:
+            .sceneKit
+        }
+    }
+}
+
 extension ModelKind: Equatable {
+    static func == (lhs: ModelKind, rhs: ModelKind) -> Bool {
+        lhs.kind == rhs.kind
+    }
 }
