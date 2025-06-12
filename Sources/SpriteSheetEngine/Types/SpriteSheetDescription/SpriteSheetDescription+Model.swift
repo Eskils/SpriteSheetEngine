@@ -14,3 +14,6 @@ extension SpriteSheetDescription {
         var export = ExportSettings()
     }
 }
+
+extension SpriteSheetDescription.Model: Equatable {
+}

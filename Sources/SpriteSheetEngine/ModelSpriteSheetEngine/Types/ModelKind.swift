@@ -12,3 +12,6 @@ enum ModelKind {
     case realityKit(Entity)
     case sceneKit(SCNScene)
 }
+
+extension ModelKind: Equatable {
+}
