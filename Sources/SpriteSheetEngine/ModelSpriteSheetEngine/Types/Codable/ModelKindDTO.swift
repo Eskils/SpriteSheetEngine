@@ -20,7 +20,12 @@ extension ModelKindDTO: Equatable {
 extension ModelKindDTO: Decodable {
     init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
-        self.url = try container.decode(URL.self)
+        let url = try container.decode(String.self)
+        if #available(macOS 13.0, *) {
+            self.url = URL(filePath: url)
+        } else {
+            self.url = URL(fileURLWithPath: url)
+        }
     }
 }
 

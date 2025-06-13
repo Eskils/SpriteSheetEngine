@@ -25,7 +25,7 @@ struct ModelKindDTOTests {
         let url = "\"\(usdModelPath)\""
         let encoded = url.data(using: .utf8)!
         let dto = try decoder.decode(ModelKindDTO.self, from: encoded)
-        #expect(dto.url.path() == URL(filePath: usdModelPath).path())
+        #expect(dto.url == URL(filePath: usdModelPath))
     }
     
     @Test
@@ -33,7 +33,7 @@ struct ModelKindDTOTests {
         let url = "\"\(scnModelPath)\""
         let encoded = url.data(using: .utf8)!
         let dto = try decoder.decode(ModelKindDTO.self, from: encoded)
-        #expect(dto.url.path() == URL(filePath: scnModelPath).path())
+        #expect(dto.url == URL(filePath: scnModelPath))
     }
     
     @Test
