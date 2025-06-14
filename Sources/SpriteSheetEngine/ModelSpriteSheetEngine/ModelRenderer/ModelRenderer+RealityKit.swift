@@ -115,6 +115,24 @@ final class RealityKitModelRenderer: Sendable {
         }
         throw .nodeDoesNotHaveMesh(id: name)
     }
+    
+    @MainActor
+    func setMaterialColor(entity: inout Entity, modelComponent: inout ModelComponent, color: NSColor) {
+        var meshMaterial = modelComponent.materials.first as? PhysicallyBasedMaterial ?? PhysicallyBasedMaterial()
+        meshMaterial.baseColor = PhysicallyBasedMaterial.BaseColor(tint: color)
+        if modelComponent.materials.count <= 1 {
+            modelComponent.materials = [meshMaterial]
+        } else {
+            modelComponent.materials.replaceSubrange(0..<1, with: [meshMaterial])
+        }
+        entity.components[ModelComponent.self] = modelComponent
+    }
+    
+    @MainActor
+    func getMaterialColor(entity: Entity, modelComponent: ModelComponent) -> NSColor {
+        var meshMaterial = modelComponent.materials.first as? PhysicallyBasedMaterial ?? PhysicallyBasedMaterial()
+        return meshMaterial.baseColor.tint
+    }
 }
 
 extension RealityKitModelRenderer: ModelRenderer {
@@ -148,24 +166,30 @@ extension RealityKitModelRenderer: ModelRenderer {
     
     @MainActor
     func perform(operation: ModelOperation) async throws -> CGImage {
+        var resetOperation: (() -> Void)?
         switch operation {
         case .none:
             break
         case .transform(let transform):
+            
             let entity = try node(named: transform.nodeID)
+            
+            let originalTransform = entity.transform.matrix
+            resetOperation = {
+                entity.transform.matrix = originalTransform
+            }
+            
             entity.transform.matrix = transform.matrix
         case .material(let material):
             var (entity, modelComponent) = try meshNode(named: material.nodeID)
-            var meshMaterial = modelComponent.materials.first as? PhysicallyBasedMaterial ?? PhysicallyBasedMaterial()
-            meshMaterial.baseColor = PhysicallyBasedMaterial.BaseColor(tint: NSColor(cgColor: material.color) ?? .magenta)
-            if modelComponent.materials.count <= 1 {
-                modelComponent.materials = [meshMaterial]
-            } else {
-                modelComponent.materials.replaceSubrange(0..<1, with: [meshMaterial])
+            let originalColor = getMaterialColor(entity: entity, modelComponent: modelComponent)
+            resetOperation = {
+                self.setMaterialColor(entity: &entity, modelComponent: &modelComponent, color: originalColor)
             }
-            entity.components[ModelComponent.self] = modelComponent
+            setMaterialColor(entity: &entity, modelComponent: &modelComponent, color: NSColor(cgColor: material.color) ?? .magenta)
         }
         let image = try await snapshotNextFrame()
+        resetOperation?()
         return image
     }
 }
