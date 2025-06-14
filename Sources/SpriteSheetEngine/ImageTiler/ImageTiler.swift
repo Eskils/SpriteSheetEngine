@@ -65,7 +65,7 @@ nonisolated class ImageTiler {
         let y = row * tileHeight
         let tileFrame = CGRect(
             x: x,
-            y: y,
+            y: context.height - y - tileHeight,
             width: tileWidth,
             height: tileHeight
         )
