@@ -16,7 +16,7 @@ struct SpriteSheetEngine<Renderer: SpriteSheetRenderer> {
         
         for operation in description.operations {
             let tile = try await renderer.makeImage(for: operation)
-            try imageTiler.checkedAppend(tile: tile)
+            imageTiler.append(tile: tile)
         }
         
         return try imageTiler.checkedFinish()
@@ -24,4 +24,7 @@ struct SpriteSheetEngine<Renderer: SpriteSheetRenderer> {
     
     func export(to url: URL) async throws {
     }
+}
+
+extension SpriteSheetEngine: Sendable {
 }

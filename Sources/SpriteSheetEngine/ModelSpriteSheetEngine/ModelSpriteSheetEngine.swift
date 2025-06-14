@@ -45,3 +45,6 @@ extension ModelSpriteSheetEngine {
         try self.init(decoding: data, type: type)
     }
 }
+
+extension ModelSpriteSheetEngine: Sendable {
+}

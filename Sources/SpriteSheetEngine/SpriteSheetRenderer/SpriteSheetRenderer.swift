@@ -7,7 +7,7 @@
 
 import CoreGraphics
 
-protocol SpriteSheetRenderer {
+protocol SpriteSheetRenderer: Sendable {
     associatedtype Description: SpriteSheetDescribable
     
     func setup(description: Description) async throws

@@ -10,14 +10,14 @@ import CoreGraphics
 import CoreImage
 
 struct MockSpriteSheetRenderer: SpriteSheetRenderer {
-    var setupHandler: ((MockSpriteSheetDescription) -> Void)?
-    var makeImageHandler: ((MockSpriteSheetOperation) -> CGImage)?
+    var setupHandler: (@MainActor (MockSpriteSheetDescription) -> Void)?
+    var makeImageHandler: (@MainActor (MockSpriteSheetOperation) -> CGImage)?
     
     func setup(description: MockSpriteSheetDescription) async throws {
-        setupHandler?(description)
+        await setupHandler?(description)
     }
     
     func makeImage(for operation: MockSpriteSheetOperation) async throws -> CGImage {
-        makeImageHandler?(operation) ?? CIContext().createCGImage(CIImage.green, from: CGRect(x: 0, y: 0, width: 100, height: 100))!
+        await makeImageHandler?(operation) ?? CIContext().createCGImage(CIImage.green, from: CGRect(x: 0, y: 0, width: 100, height: 100))!
     }
 }
