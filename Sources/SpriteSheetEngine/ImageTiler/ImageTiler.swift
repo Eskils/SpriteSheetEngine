@@ -16,8 +16,8 @@ nonisolated class ImageTiler {
     private var currentIndex = 0
     
     init(tileSize: CGSize, numberOfColumns: Int, numberOfImages: Int) throws(ImageError) {
-        let actualNumberOfColumns = min(numberOfImages, numberOfColumns)
-        let numberOfRows = (numberOfImages + 1) / numberOfColumns
+        let actualNumberOfColumns = max(1, min(numberOfImages, numberOfColumns))
+        let numberOfRows = Int(ceil(Float(numberOfImages) / Float(actualNumberOfColumns)))
         self.tileWidth = Int(tileSize.width)
         self.tileHeight = Int(tileSize.height)
         let totalImageWidth = actualNumberOfColumns * tileWidth
@@ -36,7 +36,7 @@ nonisolated class ImageTiler {
         }
         
         self.context = cgContext
-        self.numberOfColumns = numberOfColumns
+        self.numberOfColumns = actualNumberOfColumns
         self.numberOfImages = numberOfImages
     }
     
