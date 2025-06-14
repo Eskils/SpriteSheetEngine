@@ -81,6 +81,34 @@ struct ModelSpriteSheetEngineTests {
             try await engine.spriteSheet()
         }
     }
+    
+    @Test
+    @MainActor
+    func spriteSheetTransformLarge() async throws {
+        let model = try await MainActor.run {
+            try Entity.load(contentsOf: URL(filePath: modelPath))
+        }
+        let description = SpriteSheetDescription.Model(
+            model: .realityKit(model),
+            operations: [
+                .transform(ModelOperation.Transform(nodeID: "Cylinder", matrix: simd_float4x4(0.2))),
+                .transform(ModelOperation.Transform(nodeID: "Cylinder", matrix: simd_float4x4(0.4))),
+                .transform(ModelOperation.Transform(nodeID: "Cylinder", matrix: simd_float4x4(0.8))),
+                .transform(ModelOperation.Transform(nodeID: "Cylinder", matrix: simd_float4x4(1))),
+                
+                .transform(ModelOperation.Transform(nodeID: "Cone", matrix: simd_float4x4(0.2))),
+                .transform(ModelOperation.Transform(nodeID: "Cone", matrix: simd_float4x4(0.4))),
+                .transform(ModelOperation.Transform(nodeID: "Cone", matrix: simd_float4x4(0.8))),
+                .transform(ModelOperation.Transform(nodeID: "Cone", matrix: simd_float4x4(1))),
+            ],
+            numberOfColumns: 4
+        )
+        let engine = ModelSpriteSheetEngine(description: description)
+        
+        try await assertSnapshot(name: "model-sprite-sheet-2x4-transform") {
+            try await engine.spriteSheet()
+        }
+    }
 }
 
 private extension ModelSpriteSheetEngineTests {
