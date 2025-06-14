@@ -1,0 +1,109 @@
+//
+//  ModelSpriteSheetEngineTest.swift
+//  SpriteSheetEngine
+//
+//  Created by Eskil Gjerde Sviggum on 14/06/2025.
+//
+
+import Foundation
+import Testing
+import CoreGraphics
+import RealityKit
+@testable import SpriteSheetEngine
+
+struct ModelSpriteSheetEngineTests {
+    let testsDirectory = URL(fileURLWithPath: #filePath + "/../../").standardizedFileURL.path
+    private var modelPath: String {
+        filePath(name: "cyllinder-and-cone.usdc", directory: "Models")
+    }
+    
+    @Test
+    @MainActor
+    func spriteSheet() async throws {
+        let model = try await MainActor.run {
+            try Entity.load(contentsOf: URL(filePath: modelPath))
+        }
+        let description = SpriteSheetDescription.Model(
+            model: .realityKit(model),
+            operations: [
+                .none, .none,
+                .none, .none
+            ],
+            numberOfColumns: 2,
+        )
+        let engine = ModelSpriteSheetEngine(description: description)
+        
+        try await assertSnapshot(name: "model-sprite-sheet-2x2-none") {
+            try await engine.spriteSheet()
+        }
+    }
+    
+    @Test
+    @MainActor
+    func spriteSheetTransform() async throws {
+        let model = try await MainActor.run {
+            try Entity.load(contentsOf: URL(filePath: modelPath))
+        }
+        let description = SpriteSheetDescription.Model(
+            model: .realityKit(model),
+            operations: [
+                .transform(ModelOperation.Transform(nodeID: "Cylinder", matrix: simd_float4x4(0.2))),
+                .transform(ModelOperation.Transform(nodeID: "Cylinder", matrix: simd_float4x4(0.4))),
+                .transform(ModelOperation.Transform(nodeID: "Cylinder", matrix: simd_float4x4(0.8))),
+                .transform(ModelOperation.Transform(nodeID: "Cylinder", matrix: simd_float4x4(1)))
+            ],
+        )
+        let engine = ModelSpriteSheetEngine(description: description)
+        
+        try await assertSnapshot(name: "model-sprite-sheet-4-transform") {
+            try await engine.spriteSheet()
+        }
+    }
+    
+    @Test
+    @MainActor
+    func spriteSheetMaterial() async throws {
+        let model = try await MainActor.run {
+            try Entity.load(contentsOf: URL(filePath: modelPath))
+        }
+        let description = SpriteSheetDescription.Model(
+            model: .realityKit(model),
+            operations: [
+                .material(ModelOperation.Material(nodeID: "Cone", color: .init(red: 0.2, green: 0.6, blue: 0.8, alpha: 1))),
+                .material(ModelOperation.Material(nodeID: "Cone", color: .init(red: 0.4, green: 0.6, blue: 0.8, alpha: 1))),
+                .material(ModelOperation.Material(nodeID: "Cone", color: .init(red: 0.6, green: 0.6, blue: 0.8, alpha: 1))),
+                .material(ModelOperation.Material(nodeID: "Cone", color: .init(red: 0.8, green: 0.6, blue: 0.8, alpha: 1)))
+            ],
+        )
+        let engine = ModelSpriteSheetEngine(description: description)
+        
+        try await assertSnapshot(name: "model-sprite-sheet-4-material") {
+            try await engine.spriteSheet()
+        }
+    }
+}
+
+private extension ModelSpriteSheetEngineTests {
+    @MainActor
+    func load(model path: String) throws -> Entity {
+        let url = URL(fileURLWithPath: path)
+        return try Entity.load(contentsOf: url)
+    }
+    
+    func filePath(name: String, directory: String) -> String {
+        "\(testsDirectory)/\(directory)/\(name)"
+    }
+    
+    @MainActor
+    func assertSnapshot(name: String, for operations: () async throws -> CGImage) async throws {
+        let image = try await operations()
+        let fileName = name.lowercased().replacingOccurrences(of: " ", with: "-")
+        #expect(
+            try isImageEqual(
+                actual: image,
+                transformed: filePath(name: "\(fileName).png", directory: "ProducedOutputs"),
+                expected: filePath(name: "\(fileName).png", directory: "ExpectedOutputs")
+            )
+        )
+    }
+}
