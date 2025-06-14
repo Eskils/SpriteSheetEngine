@@ -11,3 +11,6 @@ extension ImageTiler {
         case tileIndexOutOfBounds(index: Int, count: Int)
     }
 }
+
+extension ImageTiler.TileError: Equatable {
+}

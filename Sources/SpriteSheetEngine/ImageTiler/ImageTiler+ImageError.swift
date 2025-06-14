@@ -11,3 +11,6 @@ extension ImageTiler {
         case cannotMakeImage
     }
 }
+
+extension ImageTiler.ImageError: Equatable {
+}
