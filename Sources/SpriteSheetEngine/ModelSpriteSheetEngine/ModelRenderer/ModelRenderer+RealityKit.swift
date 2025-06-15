@@ -130,7 +130,7 @@ final class RealityKitModelRenderer: Sendable {
     
     @MainActor
     func getMaterialColor(entity: Entity, modelComponent: ModelComponent) -> NSColor {
-        var meshMaterial = modelComponent.materials.first as? PhysicallyBasedMaterial ?? PhysicallyBasedMaterial()
+        let meshMaterial = modelComponent.materials.first as? PhysicallyBasedMaterial ?? PhysicallyBasedMaterial()
         return meshMaterial.baseColor.tint
     }
 }
