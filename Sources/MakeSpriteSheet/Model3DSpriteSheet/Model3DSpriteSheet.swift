@@ -7,6 +7,7 @@
 
 import Foundation
 import ArgumentParser
+import SpriteSheetEngine
 
 struct Model3DSpriteSheet: ParsableCommand {
     static let configuration = CommandConfiguration(
@@ -40,7 +41,25 @@ struct Model3DSpriteSheet: ParsableCommand {
         }
     }
 
-    mutating func run() {
+    mutating func run() async throws {
+        let inputURL = if #available(macOS 13.0, *) {
+            URL(filePath: input)
+        } else {
+            URL(fileURLWithPath: input)
+        }
+        
+        let outputURL = if #available(macOS 13.0, *) {
+            URL(filePath: output)
+        } else {
+            URL(fileURLWithPath: output)
+        }
+        
+        let engine = try await ModelSpriteSheetEngine(
+            url: inputURL,
+            type: .json
+        )
+        
+        try await engine.export(to: outputURL)
     }
 }
 
