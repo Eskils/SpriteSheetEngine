@@ -5,6 +5,6 @@
 //  Created by Eskil Gjerde Sviggum on 04/06/2025.
 //
 
-enum SpriteSheetDescription {
+public enum SpriteSheetDescription {
     case model(Model)
 }

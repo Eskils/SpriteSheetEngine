@@ -6,7 +6,7 @@
 //
 
 extension ImageTiler {
-    enum ImageError: Error {
+    public enum ImageError: Error {
         case cannotMakeCGContext(width: Int, height: Int)
         case cannotMakeImage
     }

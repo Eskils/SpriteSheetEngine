@@ -8,10 +8,13 @@
 import simd
 import CoreGraphics
 
-enum ModelOperation: SpriteSheetOperation {
+public enum ModelOperation: SpriteSheetOperation {
     case transform(Transform)
     case material(Material)
     case none
+}
+
+extension ModelOperation: Sendable {
 }
 
 extension ModelOperation: Equatable {

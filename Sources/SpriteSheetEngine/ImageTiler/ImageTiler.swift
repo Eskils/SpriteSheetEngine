@@ -7,7 +7,7 @@
 
 import CoreGraphics
 
-nonisolated class ImageTiler {
+public nonisolated class ImageTiler {
     let context: CGContext
     let numberOfColumns: Int
     let numberOfImages: Int
@@ -15,7 +15,7 @@ nonisolated class ImageTiler {
     let tileHeight: Int
     private var currentIndex = 0
     
-    init(tileSize: CGSize, numberOfColumns: Int, numberOfImages: Int) throws(ImageError) {
+    public init(tileSize: CGSize, numberOfColumns: Int, numberOfImages: Int) throws(ImageError) {
         let actualNumberOfColumns = max(1, min(numberOfImages, numberOfColumns))
         let numberOfRows = Int(ceil(Float(numberOfImages) / Float(actualNumberOfColumns)))
         self.tileWidth = Int(tileSize.width)
@@ -40,7 +40,7 @@ nonisolated class ImageTiler {
         self.numberOfImages = numberOfImages
     }
     
-    func checkedAppend(tile: CGImage) throws(TileError) {
+    public func checkedAppend(tile: CGImage) throws(TileError) {
         guard tile.width <= tileWidth && tile.height <= tileHeight else {
             throw .tileImageIsTooLarge(
                 actualWidth: tile.width,
@@ -57,7 +57,7 @@ nonisolated class ImageTiler {
         append(tile: tile)
     }
     
-    func append(tile: CGImage) {
+    public func append(tile: CGImage) {
         let column = currentIndex % numberOfColumns
         let row = currentIndex / numberOfColumns
         
@@ -74,11 +74,11 @@ nonisolated class ImageTiler {
         currentIndex += 1
     }
     
-    func finish() -> CGImage? {
+    public func finish() -> CGImage? {
         context.makeImage()
     }
     
-    func checkedFinish() throws(ImageError) -> CGImage {
+    public func checkedFinish() throws(ImageError) -> CGImage {
         guard let image = finish() else {
             throw .cannotMakeImage
         }

@@ -7,23 +7,36 @@
 
 import CoreGraphics
 
-struct ExportSettings {
-    var size = CGSize(width: 128, height: 128)
-    var kind = FormatKind.image
-    var format = ImageFormat.png
+public struct ExportSettings {
+    public var size: CGSize
+    public var kind: FormatKind
+    public var format: ImageFormat
+    
+    public init(
+        size: CGSize = CGSize(width: 128, height: 128),
+        kind: FormatKind = FormatKind.image,
+        format: ImageFormat = ImageFormat.png
+    ) {
+        self.size = size
+        self.kind = kind
+        self.format = format
+    }
+}
+
+extension ExportSettings: Sendable {
 }
 
 extension ExportSettings: Equatable {
 }
 
-extension ExportSettings {
-    enum FormatKind {
+public extension ExportSettings {
+    enum FormatKind: Sendable {
         case image
     }
 }
 
-extension ExportSettings {
-    enum ImageFormat {
+public extension ExportSettings {
+    enum ImageFormat: Sendable {
         case jpeg
         case png
     }

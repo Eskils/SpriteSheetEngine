@@ -7,7 +7,7 @@
 
 import CoreGraphics
 
-protocol ModelRenderer: Sendable {
+public protocol ModelRenderer: Sendable {
     associatedtype Model
     
     @MainActor

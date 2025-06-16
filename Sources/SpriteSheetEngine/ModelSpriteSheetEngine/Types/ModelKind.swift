@@ -8,7 +8,7 @@
 import RealityKit
 @preconcurrency import SceneKit
 
-enum ModelKind {
+public enum ModelKind {
     case realityKit(Entity)
     case sceneKit(SCNScene)
 }
@@ -30,7 +30,7 @@ extension ModelKind {
 }
 
 extension ModelKind: Equatable {
-    static func == (lhs: ModelKind, rhs: ModelKind) -> Bool {
+    public static func == (lhs: ModelKind, rhs: ModelKind) -> Bool {
         lhs.kind == rhs.kind
     }
 }

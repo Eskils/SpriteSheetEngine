@@ -3,11 +3,11 @@ import CoreGraphics
 import ImageIO
 import UniformTypeIdentifiers
 
-struct SpriteSheetEngine<Renderer: SpriteSheetRenderer> {
+public struct SpriteSheetEngine<Renderer: SpriteSheetRenderer> {
     let renderer: Renderer
     let description: Renderer.Description
     
-    func spriteSheet() async throws -> CGImage {
+    public func spriteSheet() async throws -> CGImage {
         try await renderer.setup(description: description)
         
         let imageTiler = try ImageTiler(
@@ -24,7 +24,7 @@ struct SpriteSheetEngine<Renderer: SpriteSheetRenderer> {
         return try imageTiler.checkedFinish()
     }
     
-    func export(to url: URL) async throws {
+    public func export(to url: URL) async throws {
         switch description.export.kind {
         case .image:
             let image = try await spriteSheet()
@@ -54,7 +54,7 @@ struct SpriteSheetEngine<Renderer: SpriteSheetRenderer> {
 extension SpriteSheetEngine: Sendable {
 }
 
-extension SpriteSheetEngine {
+public extension SpriteSheetEngine {
     enum ExportError: Error {
         case cannotMakeImageDestination(UTType)
     }

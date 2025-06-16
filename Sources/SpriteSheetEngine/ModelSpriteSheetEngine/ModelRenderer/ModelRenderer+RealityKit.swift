@@ -9,7 +9,7 @@ import RealityKit
 import AppKit
 @preconcurrency import Combine
 
-final class RealityKitModelRenderer: Sendable {
+public final class RealityKitModelRenderer: Sendable {
     @MainActor
     private let arView: ARView
     @MainActor
@@ -19,7 +19,7 @@ final class RealityKitModelRenderer: Sendable {
     private let rootNode = AnchorEntity(world: .zero)
     
     @MainActor
-    init(size: CGSize = CGSize(width: 1024, height: 1024)) {
+    public init(size: CGSize = CGSize(width: 1024, height: 1024)) {
         let arView = ARView(frame: NSRect(origin: .zero, size: size))
         self.sceneUpdateIterator = AsyncStream { continuation in
             let cancellable = arView.scene.subscribe(to: SceneEvents.Update.self) { event in
@@ -137,12 +137,12 @@ final class RealityKitModelRenderer: Sendable {
 
 extension RealityKitModelRenderer: ModelRenderer {
     @MainActor
-    func add(model: Entity) {
+    public func add(model: Entity) {
         rootNode.addChild(model)
     }
     
     @MainActor
-    func configure(camera: CameraSettings) async throws(RealityKitModelRendererError) {
+    public func configure(camera: CameraSettings) async throws(RealityKitModelRendererError) {
         switch camera.background {
         case .color(let color):
             arView.environment.background = .color(ARView.Environment.Color(cgColor: color) ?? .black)
@@ -165,7 +165,7 @@ extension RealityKitModelRenderer: ModelRenderer {
     }
     
     @MainActor
-    func perform(operation: ModelOperation) async throws -> CGImage {
+    public func perform(operation: ModelOperation) async throws -> CGImage {
         var resetOperation: (() -> Void)?
         switch operation {
         case .none:
@@ -194,7 +194,7 @@ extension RealityKitModelRenderer: ModelRenderer {
     }
 }
 
-enum RealityKitModelRendererError: Error {
+public enum RealityKitModelRendererError: Error {
     case orthographicCameraRequiresMacOS15
     case cannotCaptureSceneToImage
     case invalidRendererSize(size: CGSize)

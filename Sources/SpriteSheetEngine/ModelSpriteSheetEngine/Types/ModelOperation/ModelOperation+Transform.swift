@@ -8,10 +8,18 @@
 import simd
 
 extension ModelOperation {
-    struct Transform: ModelApplicable {
-        var nodeID: String
-        var matrix = simd_float4x4(diagonal: .one)
+    public struct Transform: ModelApplicable {
+        public var nodeID: String
+        public var matrix: simd_float4x4
+        
+        public init(nodeID: String, matrix: simd_float4x4 = simd_float4x4(diagonal: .one)) {
+            self.nodeID = nodeID
+            self.matrix = matrix
+        }
     }
+}
+
+extension ModelOperation.Transform: Sendable {
 }
 
 extension ModelOperation.Transform: Equatable {

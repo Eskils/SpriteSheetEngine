@@ -6,6 +6,6 @@
 //
 
 
-protocol ModelApplicable: SpriteSheetOperation {
+public protocol ModelApplicable: SpriteSheetOperation {
     var nodeID: String { get }
 }

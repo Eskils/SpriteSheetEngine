@@ -8,10 +8,18 @@
 import CoreGraphics
 
 extension ModelOperation {
-    struct Material: ModelApplicable {
-        var nodeID: String
-        var color: CGColor
+    public struct Material: ModelApplicable {
+        public var nodeID: String
+        public var color: CGColor
+        
+        public init(nodeID: String, color: CGColor) {
+            self.nodeID = nodeID
+            self.color = color
+        }
     }
+}
+
+extension ModelOperation.Material: Sendable {
 }
 
 extension ModelOperation.Material: Equatable {

@@ -7,7 +7,7 @@
 
 
 extension SpriteSheetDescription {
-    enum TransferableType {
+    public enum TransferableType {
         case json
     }
 }
