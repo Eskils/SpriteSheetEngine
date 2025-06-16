@@ -17,8 +17,10 @@ struct ModelSpriteSheetRenderer: SpriteSheetRenderer {
             let renderer = RealityKitModelRenderer(size: description.export.size)
             renderer.add(model: entity)
             self.renderer = renderer
+        #if SE_SCENE_KIT
         case .sceneKit:
             fatalError("Not implemented")
+        #endif
         }
     }
     

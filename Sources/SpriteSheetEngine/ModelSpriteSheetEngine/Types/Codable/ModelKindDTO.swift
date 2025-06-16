@@ -44,12 +44,14 @@ extension ModelKindDTO {
             } catch {
                 throw DataTransferError.cannotImportRealityKitEntity(error)
             }
+        #if SE_SCENE_KIT
         case .sceneKitScene:
             do {
                 return .sceneKit(try SCNScene(url: url))
             } catch {
                 throw DataTransferError.cannotImportSceneKitScene(error)
             }
+        #endif
         default:
             throw DataTransferError.cannotImportModelOfType(contentType)
         }

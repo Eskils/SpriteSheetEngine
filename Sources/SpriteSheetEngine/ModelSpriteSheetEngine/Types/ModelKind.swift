@@ -10,21 +10,27 @@ import RealityKit
 
 public enum ModelKind {
     case realityKit(Entity)
+    #if SE_SCENE_KIT
     case sceneKit(SCNScene)
+    #endif
 }
 
 extension ModelKind {
     enum Kind {
         case realityKit
+        #if SE_SCENE_KIT
         case sceneKit
+        #endif
     }
     
     var kind: Kind {
         switch self {
         case .realityKit:
             .realityKit
+        #if SE_SCENE_KIT
         case .sceneKit:
             .sceneKit
+        #endif
         }
     }
 }
