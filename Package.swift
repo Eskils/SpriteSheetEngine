@@ -29,7 +29,8 @@ let package = Package(
         .executableTarget(
             name: "MakeSpriteSheet",
             dependencies: [
-                .product(name: "ArgumentParser", package: "swift-argument-parser")
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                "SpriteSheetEngine"
             ]
         ),
         .testTarget(
