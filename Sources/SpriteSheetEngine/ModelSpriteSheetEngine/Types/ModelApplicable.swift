@@ -6,6 +6,8 @@
 //
 
 
+/// Implement this interface to describe an operation performable on a 3D-model
 public protocol ModelApplicable: SpriteSheetOperation {
+    /// A name that refers to a particular node or mesh
     var nodeID: String { get }
 }
