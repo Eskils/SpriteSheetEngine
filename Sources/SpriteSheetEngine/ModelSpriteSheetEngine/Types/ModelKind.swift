@@ -8,9 +8,12 @@
 import RealityKit
 @preconcurrency import SceneKit
 
+/// The kind of 3D Model to use for rendering
 public enum ModelKind {
+    /// A reality kit 3D model, such as a USD entity.
     case realityKit(Entity)
     #if SE_SCENE_KIT
+    /// A scene kit 3D model, such as a SCN scene.
     case sceneKit(SCNScene)
     #endif
 }
