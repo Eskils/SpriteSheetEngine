@@ -9,6 +9,7 @@ import RealityKit
 import AppKit
 @preconcurrency import Combine
 
+/// Implementation of renderer for RealityKit entities into sprite sheet tiles.
 public final class RealityKitModelRenderer: Sendable {
     @MainActor
     private let arView: ARView
@@ -194,12 +195,20 @@ extension RealityKitModelRenderer: ModelRenderer {
     }
 }
 
+/// Collection of possible errors thrown by ``RealityKitModelRenderer``.
 public enum RealityKitModelRendererError: Error {
+    /// Orthographic camera requires macOS 15.0 or later
     case orthographicCameraRequiresMacOS15
+    /// The scene could not be rendered to an image
     case cannotCaptureSceneToImage
+    /// Invalid size of renderer. Typically a zero size is invalid.
     case invalidRendererSize(size: CGSize)
+    /// The rendered image could not be converted to a CGImage
     case cannotConvertToCoreGraphicsImage
+    /// A node with the given ID could not be found
     case cannotFindNodeWithID(id: String)
+    /// The found node does not have a mesh.
     case nodeDoesNotHaveMesh(id: String)
+    /// Other error
     case otherError(Error)
 }
