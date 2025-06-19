@@ -7,7 +7,9 @@
 
 
 extension SpriteSheetDescription {
+    /// Supported file formats for decoding a codable sprite sheet description
     public enum TransferableType {
+        /// Decode a codable sprite sheet description stored in JSON format
         case json
     }
 }
