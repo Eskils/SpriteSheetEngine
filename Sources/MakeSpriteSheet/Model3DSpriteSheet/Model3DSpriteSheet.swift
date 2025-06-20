@@ -32,38 +32,26 @@ struct Model3DSpriteSheet: AsyncParsableCommand {
     var output: String
 
     mutating func run() async throws {
-        let currentWorkingDirectory = if #available(macOS 13.0, *) {
-            #if DEBUG
-            if ProcessInfo.processInfo.environment["XCODE_RUN"] != nil {
-                URL(filePath: #filePath + "../../../../../").standardizedFileURL
-            } else {
-                URL(filePath: FileManager.default.currentDirectoryPath)
-            }
-            #else
-            URL(filePath: FileManager.default.currentDirectoryPath)
-            #endif
+        #if DEBUG
+        let currentWorkingDirectory = if ProcessInfo.processInfo.environment["XCODE_RUN"] != nil {
+            URL(compatibilityPath: #filePath + "../../../../../").standardizedFileURL
         } else {
-            URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
+            URL(compatibilityPath: FileManager.default.currentDirectoryPath)
+        }
+        #else
+        let currentWorkingDirectory = URL(compatibilityPath: FileManager.default.currentDirectoryPath)
+        #endif
+        
+        let inputURL = URL(compatibilityPath: input, relativeTo: currentWorkingDirectory)
+        
+        let outputURL = URL(compatibilityPath: output, relativeTo: currentWorkingDirectory)
+        
+        guard FileManager.default.fileExists(atPath: inputURL.compatibilityPath) else {
+            throw ValidationError.invalidInputPath(inputURL.compatibilityPath)
         }
         
-        let inputURL = if #available(macOS 13.0, *) {
-            URL(filePath: input, relativeTo: currentWorkingDirectory)
-        } else {
-            URL(fileURLWithPath: input, relativeTo: currentWorkingDirectory)
-        }
-        
-        let outputURL = if #available(macOS 13.0, *) {
-            URL(filePath: output, relativeTo: currentWorkingDirectory)
-        } else {
-            URL(fileURLWithPath: output, relativeTo: currentWorkingDirectory)
-        }
-        
-        guard FileManager.default.fileExists(atPath: inputURL.path) else {
-            throw ValidationError.invalidInputPath(input)
-        }
-        
-        guard FileManager.default.isWritableFile(atPath: outputURL.deletingLastPathComponent().path) else {
-            throw ValidationError.invalidOutputPath(output)
+        guard FileManager.default.isWritableFile(atPath: outputURL.deletingLastPathComponent().compatibilityPath) else {
+            throw ValidationError.invalidOutputPath(outputURL.compatibilityPath)
         }
         
         let engine = try await ModelSpriteSheetEngine(
