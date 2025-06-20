@@ -1,0 +1,33 @@
+{
+    "model": "cyllinder-and-cone.usdc",
+    "camera": {
+        "background": "#aabbcc",
+        "transform": [
+            1,0,0,0,
+            0,1,0,0,
+            0,0,1,6,
+            0,0,0,1
+        ]
+    },
+    "operations": [
+        {
+            "type": "transform",
+            "nodeID": "Cylinder",
+            "matrix": [
+                1,0,0,0,
+                0,1,0,2,
+                0,0,1,0,
+                0,0,0,1
+            ]
+        },
+        {
+            "type": "material",
+            "nodeID": "Cone",
+            "color": "#AABBCC"
+        }
+    ],
+    "numberOfColumns": 4,
+    "export": {
+        "size": [100, 100],
+    }
+}
