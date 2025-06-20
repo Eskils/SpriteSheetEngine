@@ -8,7 +8,7 @@
 import ArgumentParser
 
 @main
-struct MakeSpriteSheet: ParsableCommand {
+struct MakeSpriteSheet: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "mk-sprite-sheet",
         abstract: "A utility to make sprite sheets.",
