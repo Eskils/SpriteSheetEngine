@@ -53,10 +53,13 @@ extension ModelSpriteSheetEngine {
     ///   - data: Data of description defining the model, camera and operations used to make the sprite sheet.
     ///   - type: The data format used to store the description
     @MainActor
-    public init(decoding data: Data, type: SpriteSheetDescription.TransferableType) throws {
+    public init(decoding data: Data, type: SpriteSheetDescription.TransferableType, relativeTo base: URL? = nil) throws {
         switch type {
         case .json:
-            let dto = try JSONDecoder().decode(SpriteSheetDescription.ModelDTO.self, from: data)
+            var dto = try JSONDecoder().decode(SpriteSheetDescription.ModelDTO.self, from: data)
+            if let base {
+                dto.model.resolvePath(relativeTo: base)
+            }
             let description = try dto.toModel()
             self.init(description: description)
         }
@@ -67,9 +70,9 @@ extension ModelSpriteSheetEngine {
     ///   - url: File URL to description defining the model, camera and operations used to make the sprite sheet.
     ///   - type: The data format used to store the description
     @MainActor
-    public init(url: URL, type: SpriteSheetDescription.TransferableType) throws {
+    public init(url: URL, type: SpriteSheetDescription.TransferableType, relativeTo base: URL? = nil) throws {
         let data = try Data(contentsOf: url)
-        try self.init(decoding: data, type: type)
+        try self.init(decoding: data, type: type, relativeTo: base)
     }
 }
 
