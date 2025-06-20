@@ -11,7 +11,15 @@ import RealityKit
 import SceneKit
 
 struct ModelKindDTO {
-    let url: URL
+    var url: URL
+    
+    mutating func resolvePath(relativeTo base: URL) {
+        self.url = if #available(macOS 13.0, *) {
+            URL(filePath: url.path(), relativeTo: base)
+        } else {
+            URL(fileURLWithPath: url.path, relativeTo: base)
+        }
+    }
 }
 
 extension ModelKindDTO: Equatable {
