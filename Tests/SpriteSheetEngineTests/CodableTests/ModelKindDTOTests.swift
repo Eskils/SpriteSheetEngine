@@ -45,6 +45,7 @@ struct ModelKindDTOTests {
         #expect(model.kind == .realityKit)
     }
     
+    #if SE_SCENE_KIT
     @Test
     @MainActor
     func scnToSceneKitScene() throws {
@@ -53,6 +54,7 @@ struct ModelKindDTOTests {
         let model = try dto.toModel()
         #expect(model.kind == .sceneKit)
     }
+    #endif
 }
 
 private extension ModelKindDTOTests {
