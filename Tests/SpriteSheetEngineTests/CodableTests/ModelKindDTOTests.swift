@@ -13,10 +13,10 @@ import RealityKit
 struct ModelKindDTOTests {
     let testsDirectory = URL(fileURLWithPath: #filePath + "/../../").standardizedFileURL.path
     private var usdModelPath: String {
-        filePath(name: "cylinder-and-cone.usdc", directory: "Models")
+        filePath(name: "cylinder-and-cone.usdc", directory: "TestAssets")
     }
     private var scnModelPath: String {
-        filePath(name: "cylinder-and-cone.scn", directory: "Models")
+        filePath(name: "cylinder-and-cone.scn", directory: "TestAssets")
     }
     let decoder = JSONDecoder()
     

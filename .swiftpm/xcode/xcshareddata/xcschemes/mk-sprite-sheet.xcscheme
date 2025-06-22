@@ -57,7 +57,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "&apos;./Tests/SpriteSheetEngineTests/Models/cylinder-and-cone-sheet-description.json&apos;"
+            argument = "&apos;./Tests/SpriteSheetEngineTests/TestAssets/cylinder-and-cone-sheet-description.json&apos;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

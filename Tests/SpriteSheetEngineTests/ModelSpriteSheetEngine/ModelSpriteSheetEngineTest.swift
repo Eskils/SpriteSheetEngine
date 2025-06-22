@@ -14,7 +14,7 @@ import RealityKit
 struct ModelSpriteSheetEngineTests {
     let testsDirectory = URL(fileURLWithPath: #filePath + "/../../").standardizedFileURL.path
     private var modelPath: String {
-        filePath(name: "cylinder-and-cone.usdc", directory: "Models")
+        filePath(name: "cylinder-and-cone.usdc", directory: "TestAssets")
     }
     
     @Test
