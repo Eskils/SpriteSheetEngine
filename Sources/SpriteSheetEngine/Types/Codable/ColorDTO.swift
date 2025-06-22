@@ -6,10 +6,14 @@
 //
 
 import CoreGraphics
+#if canImport(AppKit)
+import AppKit
+#endif
 
 enum ColorDTO {
     case transparent
     case hex(Int)
+    case hsb(Float, Float, Float)
 }
 
 extension ColorDTO: Codable {
@@ -21,6 +25,10 @@ extension ColorDTO: Codable {
         case .hex(let int):
             let hexString = String(int, radix: 16)
             try container.encode("#\(hexString)")
+        #if canImport(AppKit)
+        case .hsb(let hue, let saturation, let brightness):
+            try container.encode("hsb(\(hue), \(saturation), \(brightness))")
+        #endif
         }
     }
     
@@ -36,6 +44,28 @@ extension ColorDTO: Codable {
                 throw DecoderError.cannotParseStringAsHex(string)
             }
             self = .hex(hex)
+        #if canImport(AppKit)
+        case string.starts(with: "hsb"):
+            let componentsString = string[string.index(string.startIndex, offsetBy: 4)..<string.index(before: string.endIndex)]
+            let components = componentsString
+                .split(separator: ",")
+                .map { $0.trimmingCharacters(in: .whitespaces) }
+            guard components.count >= 3 else {
+                throw DecoderError.tooFewComponentsForHSB(count: components.count, expected: 3)
+            }
+            let floatComponents = try components.map { component in
+                guard let value = Float(component) else {
+                    throw DecoderError.cannotConvertStringToFloat(component)
+                }
+                
+                guard 0...1 ~= value else {
+                    throw DecoderError.numberExceedsAllowedBounds(value: value, min: 0, max: 1)
+                }
+                
+                return value
+            }
+            self = .hsb(floatComponents[0], floatComponents[1], floatComponents[2])
+        #endif
         case string.count == 6:
             guard let hex = Int(string, radix: 16) else {
                 throw DecoderError.cannotParseStringAsHex(string)
@@ -50,6 +80,9 @@ extension ColorDTO: Codable {
     enum DecoderError: Error {
         case cannotParseStringIntoColor(String)
         case cannotParseStringAsHex(String)
+        case tooFewComponentsForHSB(count: Int, expected: Int)
+        case cannotConvertStringToFloat(String)
+        case numberExceedsAllowedBounds(value: Float, min: Float, max: Float)
     }
 }
 
@@ -71,6 +104,15 @@ extension ColorDTO: DataTransferObject {
                 blue: CGFloat(blue) / 255,
                 alpha: 1
             )
+        #if canImport(AppKit)
+        case .hsb(let hue, let saturation, let brightness):
+            return NSColor(
+                hue: CGFloat(hue),
+                saturation: CGFloat(saturation),
+                brightness: CGFloat(brightness),
+                alpha: 1
+            ).cgColor
+        #endif
         }
     }
     
@@ -80,6 +122,10 @@ extension ColorDTO: DataTransferObject {
             .transparent
         case .hex:
             .color(toModel())
+        #if canImport(AppKit)
+        case .hsb:
+            .color(toModel())
+        #endif
         }
     }
     
