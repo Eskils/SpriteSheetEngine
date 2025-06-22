@@ -29,7 +29,7 @@ public protocol SpriteSheetRenderer: Sendable {
     /// It is called by the engine for every operation defined in the sprite sheet description.
     ///
     /// After rendering the image, any work necessary to revert the changes in the environment should be performed before returning the image.
-    /// See ``RealityKitModelRenderer.perform(operation:)`` for an example of resetting the performed operation.
+    /// See ``RealityKitModelRenderer/perform(operation:)`` for an example of resetting the performed operation.
     ///
     /// - Parameter operation: The operation describing the image to produce
     /// - Returns: A CoreGraphics image rendered by the implementing renderer

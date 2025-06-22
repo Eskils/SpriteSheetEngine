@@ -7,7 +7,7 @@
 
 /// Implement this interface to be recognized as a sprite sheet description.
 ///
-/// - SeeAlso: ``SpriteSheetDescription.Model``
+/// - SeeAlso: ``SpriteSheetDescription/Model``
 public protocol SpriteSheetDescribable: Sendable {
     associatedtype Operation: SpriteSheetOperation
     /// Operations used to produce the tiles.

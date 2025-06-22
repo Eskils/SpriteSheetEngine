@@ -48,7 +48,7 @@ extension CameraSettings {
         /// This simulates how the eye sees the worls and is the most common.
         case perspective
         /// This gives a view where all angles and lengths are preserved, but distance is difficult to perceive.
-        /// In RealityKit, only available on macOS 15.0 or newer. Throws ``RealityKitModelRendererError.orthographicCameraRequiresMacOS15`` if used on an unsupported system.
+        /// In RealityKit, only available on macOS 15.0 or newer. Throws ``RealityKitModelRendererError/orthographicCameraRequiresMacOS15`` if used on an unsupported system.
         case orthographic
     }
 }

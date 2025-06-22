@@ -21,7 +21,7 @@ public nonisolated class ImageTiler {
     
     /// Constructs a new image tiler by defining a grid from `tileSize`, `numberOfColumns` and `numberOfImages`.
     /// - Throws:
-    ///     - ``ImageTiler.ImageError`` if the grid could not be made. For example if the grid would have invalid dimensions.
+    ///     - ``ImageError`` if the grid could not be made. For example if the grid would have invalid dimensions.
     public init(tileSize: CGSize, numberOfColumns: Int, numberOfImages: Int) throws(ImageError) {
         let actualNumberOfColumns = max(1, min(numberOfImages, numberOfColumns))
         let numberOfRows = Int(ceil(Float(numberOfImages) / Float(actualNumberOfColumns)))
@@ -50,7 +50,7 @@ public nonisolated class ImageTiler {
     /// Arrange a subimage to the next available slot in the grid.
     /// - Parameter tile: Subimage to arrange in the grid.
     /// - Throws:
-    ///     - ``ImageTiler.TileError`` if the tile is too large or if the grid is full.
+    ///     - ``TileError`` if the tile is too large or if the grid is full.
     public func checkedAppend(tile: CGImage) throws(TileError) {
         guard tile.width <= tileWidth && tile.height <= tileHeight else {
             throw .tileImageIsTooLarge(
@@ -106,7 +106,7 @@ public nonisolated class ImageTiler {
     ///
     /// - Returns: Image of tiled grid as a CoreGraphics image
     /// - Throws:
-    ///     - ``ImageTiler.ImageError`` if the final image could not be made.
+    ///     - ``ImageError`` if the final image could not be made.
     public func checkedFinish() throws(ImageError) -> CGImage {
         guard let image = finish() else {
             throw .cannotMakeImage

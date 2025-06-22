@@ -8,7 +8,7 @@
 extension SpriteSheetDescription {
     /// Description used for making a sprite sheet from a 3D-model
     ///
-    /// - SeeAlso: ``SpriteSheetDescription.ModelDTO``
+    /// - SeeAlso: `SpriteSheetDescription.ModelDTO`
     public struct Model: SpriteSheetDescribable {
         /// The kind of 3D Model to use for rendering
         public var model: ModelKind

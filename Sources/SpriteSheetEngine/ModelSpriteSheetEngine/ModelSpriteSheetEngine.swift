@@ -10,9 +10,9 @@ import CoreGraphics
 
 /// Engine used to make sprite sheets from 3D-models.
 ///
-/// You create this engine with a sprite sheet description ``SpriteSheetDescription.Model`` defining the model, camera and operations used to make the sprite sheet..
+/// You create this engine with a sprite sheet description ``SpriteSheetDescription/Model`` defining the model, camera and operations used to make the sprite sheet..
 /// This description can be made in code or parsed from a file, for instance json.
-/// For codable structure, see ``SpriteSheetDescription.ModelDTO``.
+/// For codable structure, see `SpriteSheetDescription.ModelDTO`.
 public nonisolated struct ModelSpriteSheetEngine {
     let description: SpriteSheetDescription.Model
     let engine: SpriteSheetEngine<ModelSpriteSheetRenderer>
@@ -29,7 +29,7 @@ public nonisolated struct ModelSpriteSheetEngine {
     /// Make sprite sheet as an image
     /// - Returns: Sprite sheet as a CoreGraphics image
     /// - Throws:
-    ///     - ``ImageTiler.ImageError``
+    ///     - ``ImageTiler/ImageError``
     ///     - ``RealityKitModelRendererError``
     ///     - Possibly undocumented errors
     public func spriteSheet() async throws -> CGImage {
@@ -39,7 +39,7 @@ public nonisolated struct ModelSpriteSheetEngine {
     /// Make sprite sheet as an image and save to disk
     /// - Parameter url: File URL to the output path of the sprite sheet image
     /// - Throws:
-    ///     - ``ImageTiler.ImageError``
+    ///     - ``ImageTiler/ImageError``
     ///     - ``RealityKitModelRendererError``
     ///     - Possibly undocumented errors
     public func export(to url: URL) async throws {
