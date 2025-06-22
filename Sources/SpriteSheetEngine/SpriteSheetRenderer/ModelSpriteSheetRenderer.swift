@@ -7,7 +7,8 @@
 
 import CoreGraphics
 
-struct ModelSpriteSheetRenderer: SpriteSheetRenderer {
+/// Renders 3D-models to sprite sheet tiles
+public struct ModelSpriteSheetRenderer: SpriteSheetRenderer {
     let renderer: any ModelRenderer
     
     @MainActor
@@ -24,11 +25,11 @@ struct ModelSpriteSheetRenderer: SpriteSheetRenderer {
         }
     }
     
-    func setup(description: SpriteSheetDescription.Model) async throws {
+    public func setup(description: SpriteSheetDescription.Model) async throws {
         try await renderer.configure(camera: description.camera)
     }
     
-    func makeImage(for operation: ModelOperation) async throws -> CGImage {
+    public func makeImage(for operation: ModelOperation) async throws -> CGImage {
         try await renderer.perform(operation: operation)
     }
 }
