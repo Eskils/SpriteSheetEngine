@@ -52,6 +52,7 @@ extension ModelSpriteSheetEngine {
     /// - Parameters:
     ///   - data: Data of description defining the model, camera and operations used to make the sprite sheet.
     ///   - type: The data format used to store the description
+    ///   - base: The base for where to locate the 3D-model if its file URL is relative.
     @MainActor
     public init(decoding data: Data, type: SpriteSheetDescription.TransferableType, relativeTo base: URL? = nil) throws {
         switch type {
@@ -69,6 +70,7 @@ extension ModelSpriteSheetEngine {
     /// - Parameters:
     ///   - url: File URL to description defining the model, camera and operations used to make the sprite sheet.
     ///   - type: The data format used to store the description
+    ///   - base: The base for where to locate the 3D-model if its file URL is relative.
     @MainActor
     public init(url: URL, type: SpriteSheetDescription.TransferableType, relativeTo base: URL? = nil) throws {
         let data = try Data(contentsOf: url)
