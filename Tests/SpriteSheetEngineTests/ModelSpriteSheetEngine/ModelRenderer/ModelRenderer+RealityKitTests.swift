@@ -15,7 +15,7 @@ import CoreGraphics
 struct ModelRendererRealityKitTests {
     let testsDirectory = URL(fileURLWithPath: #filePath + "/../../../").standardizedFileURL.path
     private var modelPath: String {
-        filePath(name: "cyllinder-and-cone.usdc", directory: "Models")
+        filePath(name: "cylinder-and-cone.usdc", directory: "Models")
     }
     
     let rendererSize = CGSize(width: 256, height: 256)

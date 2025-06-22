@@ -17,7 +17,7 @@ struct SpriteSheetDescriptionDTOTests {
     
     let testsDirectory = URL(fileURLWithPath: #filePath + "/../../").standardizedFileURL.path
     private var usdModelPath: String {
-        filePath(name: "cyllinder-and-cone.usdc", directory: "Models")
+        filePath(name: "cylinder-and-cone.usdc", directory: "Models")
     }
     
     @Test
@@ -38,7 +38,7 @@ struct SpriteSheetDescriptionDTOTests {
             "operations": [
                 {
                     "type": "transform",
-                    "nodeID": "cyllinder",
+                    "nodeID": "cylinder",
                     "matrix": [
                         1,0,0,0,
                         0,1,0,2,
@@ -80,7 +80,7 @@ struct SpriteSheetDescriptionDTOTests {
                 .transform(
                     ModelOperation.TransformDTO(
                         type: .transform,
-                        nodeID: "cyllinder",
+                        nodeID: "cylinder",
                         matrix: Matrix4x4DTO(
                             numbers: [
                                 1, 0, 0, 0,
@@ -130,7 +130,7 @@ struct SpriteSheetDescriptionDTOTests {
                 .transform(
                     ModelOperation.TransformDTO(
                         type: .transform,
-                        nodeID: "cyllinder",
+                        nodeID: "cylinder",
                         matrix: Matrix4x4DTO(
                             numbers: [
                                 1, 0, 0, 0,
@@ -174,7 +174,7 @@ struct SpriteSheetDescriptionDTOTests {
             operations: [
                 .transform(
                     ModelOperation.Transform(
-                        nodeID: "cyllinder",
+                        nodeID: "cylinder",
                         matrix: simd_float4x4(
                             rows: [
                                 SIMD4(1, 0, 0, 0),

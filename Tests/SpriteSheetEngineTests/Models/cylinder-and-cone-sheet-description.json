@@ -1,5 +1,5 @@
 {
-    "model": "cyllinder-and-cone.usdc",
+    "model": "cylinder-and-cone.usdc",
     "camera": {
         "background": "#aabbcc",
         "transform": [
