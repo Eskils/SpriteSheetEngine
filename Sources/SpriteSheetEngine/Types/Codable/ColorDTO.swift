@@ -89,6 +89,9 @@ extension ColorDTO: Codable {
 extension ColorDTO: Equatable {
 }
 
+extension ColorDTO.DecoderError: Equatable {
+}
+
 extension ColorDTO: DataTransferObject {
     func toModel() -> CGColor {
         switch self {
