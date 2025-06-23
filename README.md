@@ -292,7 +292,7 @@ Please use the following schema as a reference:
 {
   "model": "file url as string",
   "camera": {
-    "background": "#AABBCC" | "transparent",
+    "background": "#AABBCC" | "transparent" | hsb(0.1, 0.2, 0.3),
     "projection": "perspective" | "orthographic",
     "transform": [
       1, 0, 0, 0,
@@ -315,7 +315,7 @@ Please use the following schema as a reference:
     {
       "type": "material",
       "nodeID": "cone",
-      "color": "#AABBCC" | "transparent"
+      "color": "#AABBCC" | "transparent" | hsb(0.1, 0.2, 0.3)
     },
     {
       "type": "none"
