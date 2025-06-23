@@ -54,6 +54,50 @@ struct ColorDTOTests {
         #expect(dto == .hex(0xAABBCC))
     }
     
+    #if canImport(AppKit)
+    @Test
+    func encodeHSB() throws {
+        let dto = ColorDTO.hsb(0.1, 0.2, 0.3)
+        let encoded = try encoder.encode(dto)
+        let string = String(data: encoded, encoding: .utf8)
+        #expect(string == "\"hsb(0.1, 0.2, 0.3)\"")
+    }
+    
+    @Test
+    func decodeHSB() throws {
+        let string = "\"hsb(0.1, 0.2, 0.3)\""
+        let encoded = string.data(using: .utf8)!
+        let dto = try decoder.decode(ColorDTO.self, from: encoded)
+        #expect(dto == .hsb(0.1, 0.2, 0.3))
+    }
+    
+    @Test
+    func hsbToModel() throws {
+        let dto = ColorDTO.hsb(0.1, 0.2, 0.3)
+        let model = dto.toModel()
+        let components = model.components ?? []
+        #expect(0.295..<0.305 ~= components[0])
+        #expect(0.271..<0.281 ~= components[1])
+        #expect(0.235..<0.245 ~= components[2])
+        #expect(1 == components[3])
+    }
+    
+    @Test
+    func hsbToBackgroundKind() throws {
+        let dto = ColorDTO.hsb(0.1, 0.2, 0.3)
+        let model = dto.toBackgroundKind()
+        if case let .color(color) = model {
+            let components = color.components ?? []
+            #expect(0.295..<0.305 ~= components[0])
+            #expect(0.271..<0.281 ~= components[1])
+            #expect(0.235..<0.245 ~= components[2])
+            #expect(1 == components[3])
+        } else {
+            try #require(Bool(false))
+        }
+    }
+    #endif
+    
     @Test
     func hexToModel() throws {
         let dto = ColorDTO.hex(0xAABBCC)
