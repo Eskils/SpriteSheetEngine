@@ -7,6 +7,7 @@
 
 struct ExportSettingsDTO {
     var size: Vector2DTO?
+    var cropRect: Vector4DTO?
     var kind: FormatKindDTO?
     var format: ImageFormatDTO?
 }
@@ -25,6 +26,10 @@ extension ExportSettingsDTO: DataTransferObject {
             settings.size = size.toCGSize()
         }
         
+        if let cropRect {
+            settings.cropRect = cropRect.toCGRect()
+        }
+        
         if let kind {
             settings.kind = kind.toModel()
         }
@@ -39,6 +44,7 @@ extension ExportSettingsDTO: DataTransferObject {
     init(model: ExportSettings) {
         self.init(
             size: Vector2DTO(cgSize: model.size),
+            cropRect: model.cropRect.map { Vector4DTO(cgRect: $0) },
             kind: FormatKindDTO(model: model.kind),
             format: ImageFormatDTO(model: model.format)
         )
