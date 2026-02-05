@@ -76,7 +76,7 @@ extension ExportSettings {
             return nil
         }
         
-        let vectorCropRect = SIMD4(Float(cropRect.minX), Float(cropRect.minY), Float(cropRect.width), Float(cropRect.height))
+        let vectorCropRect = SIMD4(Float(cropRect.origin.x), Float(cropRect.origin.y), Float(cropRect.size.width), Float(cropRect.size.height))
         let minCropRect = SIMD4<Float>.zero
         let maxCropRect = SIMD4(Float(size.width), Float(size.height), Float(size.width), Float(size.height))
         let clampedCropRect = clamp(vectorCropRect, min: minCropRect, max: maxCropRect)
