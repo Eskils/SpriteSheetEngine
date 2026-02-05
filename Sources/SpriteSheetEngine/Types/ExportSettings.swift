@@ -5,6 +5,7 @@
 //  Created by Eskil Gjerde Sviggum on 04/06/2025.
 //
 
+import simd
 import CoreGraphics
 
 /// Collection of properties used to describe how to export the sprite sheet.
@@ -57,5 +58,34 @@ public extension ExportSettings {
         case jpeg
         /// Export the sprite sheet as a PNG image
         case png
+    }
+}
+
+extension ExportSettings {
+    func normalized() -> ExportSettings {
+        ExportSettings(
+            size: size,
+            cropRect: normalizedCropRect(),
+            kind: kind,
+            format: format
+        )
+    }
+    
+    private func normalizedCropRect() -> CGRect? {
+        guard let cropRect else {
+            return nil
+        }
+        
+        let vectorCropRect = SIMD4(Float(cropRect.minX), Float(cropRect.minY), Float(cropRect.width), Float(cropRect.height))
+        let minCropRect = SIMD4<Float>.zero
+        let maxCropRect = SIMD4(Float(size.width), Float(size.height), Float(size.width), Float(size.height))
+        let clampedCropRect = clamp(vectorCropRect, min: minCropRect, max: maxCropRect)
+        
+        return CGRect(
+            x: CGFloat(clampedCropRect.x),
+            y: CGFloat(clampedCropRect.y),
+            width: CGFloat(clampedCropRect.z),
+            height: CGFloat(clampedCropRect.w)
+        )
     }
 }
