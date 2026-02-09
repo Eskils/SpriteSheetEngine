@@ -125,8 +125,8 @@ struct ModelSpriteSheetEngineTests {
                 .material(ModelOperation.Material(nodeID: "Cone", color: .init(red: 0.8, green: 0.6, blue: 0.8, alpha: 1)))
             ],
             export: ExportSettings(
-                size: CGSize(width: 64, height: 64),
-                cropRect: CGRect(x: 128, y: 0, width: 256, height: 256)
+                size: CGSize(width: 128, height: 128),
+                cropRect: CGRect(x: 64, y: 40, width: 64, height: 88)
             )
         )
         let engine = ModelSpriteSheetEngine(description: description)
