@@ -35,6 +35,7 @@ struct SpriteSheetEngineTests {
     }
     
     @Test
+    @MainActor
     func spriteSheetCallsMakeImageForEachOperation() async throws {
         var imageCount = 0
         let expectedImageCount = Int.random(in: 4..<20)

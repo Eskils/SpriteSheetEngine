@@ -119,7 +119,7 @@ struct ImageTilerTests {
                     CIImage(color: .blue),
                     from: CGRect(origin: .zero, size: CGSize(width: 200, height: 210))
                 )!
-            try imageTiler.append(tile: tile)
+            imageTiler.append(tile: tile)
         }
     }
     
@@ -141,7 +141,7 @@ struct ImageTilerTests {
         }
         
         #expect(throws: Never.self) {
-            try imageTiler.append(tile: tile)
+            imageTiler.append(tile: tile)
         }
     }
     

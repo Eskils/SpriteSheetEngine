@@ -23,13 +23,14 @@ struct ExportSettingsDTOTests {
     func encode() throws {
         let dto = ExportSettingsDTO(
             size: Vector2DTO(x: 1, y: 2),
+            cropRect: Vector4DTO(x: 1, y: 2, z: 3, w: 4),
             kind: .image,
             format: .jpeg
         )
         let encoded = try encoder.encode(dto)
         let string = String(data: encoded, encoding: .utf8)
         let expected = """
-        {"format":"jpeg","kind":"image","size":[1,2]}
+        {"cropRect":[1,2,3,4],"format":"jpeg","kind":"image","size":[1,2]}
         """
         #expect(string == expected)
     }
@@ -37,12 +38,13 @@ struct ExportSettingsDTOTests {
     @Test
     func decode() throws {
         let string = """
-        {"format":"jpeg","kind":"image","size":[1,2]}
+        {"cropRect":[1,2,3,4],"format":"jpeg","kind":"image","size":[1,2]}
         """
         let encoded = string.data(using: .utf8)!
         let dto = try decoder.decode(ExportSettingsDTO.self, from: encoded)
         let expected = ExportSettingsDTO(
             size: Vector2DTO(x: 1, y: 2),
+            cropRect: Vector4DTO(x: 1, y: 2, z: 3, w: 4),
             kind: .image,
             format: .jpeg
         )
@@ -53,12 +55,14 @@ struct ExportSettingsDTOTests {
     func toModel() throws {
         let dto = ExportSettingsDTO(
             size: Vector2DTO(x: 1, y: 2),
+            cropRect: Vector4DTO(x: 1, y: 2, z: 3, w: 4),
             kind: .image,
             format: .jpeg
         )
         let model = dto.toModel()
         let expected = ExportSettings(
             size: CGSize(width: 1, height: 2),
+            cropRect: CGRect(x: 1, y: 2, width: 3, height: 4),
             kind: .image,
             format: .jpeg
         )
@@ -67,6 +71,24 @@ struct ExportSettingsDTOTests {
     
     @Test
     func fromModel() throws {
+        let model = ExportSettings(
+            size: CGSize(width: 1, height: 2),
+            cropRect: CGRect(x: 1, y: 2, width: 3, height: 4),
+            kind: .image,
+            format: .jpeg
+        )
+        let dto = ExportSettingsDTO(model: model)
+        let expected = ExportSettingsDTO(
+            size: Vector2DTO(x: 1, y: 2),
+            cropRect: Vector4DTO(x: 1, y: 2, z: 3, w: 4),
+            kind: .image,
+            format: .jpeg
+        )
+        #expect(dto == expected)
+    }
+    
+    @Test
+    func fromModelWithoutOptionals() throws {
         let model = ExportSettings(
             size: CGSize(width: 1, height: 2),
             kind: .image,

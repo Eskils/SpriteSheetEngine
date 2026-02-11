@@ -5,14 +5,19 @@
 //  Created by Eskil Gjerde Sviggum on 04/06/2025.
 //
 
+import simd
 import CoreGraphics
 
 /// Collection of properties used to describe how to export the sprite sheet.
 public struct ExportSettings {
-    /// Size of each tile in the sprite sheet.
+    /// Size to use when rendering each tile in the sprite sheet.
     /// A zero size is invalid and will in most cases throw an error.
     /// Default is `width: 128`, `height: 128`
     public var size: CGSize
+    /// Absolute rect of the cropping to apply each tile in the sprite sheet.
+    /// A zero size is invalid and will in most cases throw an error.
+    /// Default is `nil` which will leave the rendered image uncropped
+    public var cropRect: CGRect?
     /// The type of export used when writing to disk. Currently, only `image` is supported.
     /// This property is intended as a reserved property for possible future expansions.
     public var kind: FormatKind
@@ -21,10 +26,12 @@ public struct ExportSettings {
     
     public init(
         size: CGSize = CGSize(width: 128, height: 128),
+        cropRect: CGRect? = nil,
         kind: FormatKind = FormatKind.image,
         format: ImageFormat = ImageFormat.png
     ) {
         self.size = size
+        self.cropRect = cropRect
         self.kind = kind
         self.format = format
     }
@@ -51,5 +58,34 @@ public extension ExportSettings {
         case jpeg
         /// Export the sprite sheet as a PNG image
         case png
+    }
+}
+
+extension ExportSettings {
+    func normalized() -> ExportSettings {
+        ExportSettings(
+            size: size,
+            cropRect: normalizedCropRect(),
+            kind: kind,
+            format: format
+        )
+    }
+    
+    private func normalizedCropRect() -> CGRect? {
+        guard let cropRect else {
+            return nil
+        }
+        
+        let vectorCropRect = SIMD4(Float(cropRect.origin.x), Float(cropRect.origin.y), Float(cropRect.size.width), Float(cropRect.size.height))
+        let minCropRect = SIMD4<Float>.zero
+        let maxCropRect = SIMD4(Float(size.width), Float(size.height), Float(size.width), Float(size.height))
+        let clampedCropRect = clamp(vectorCropRect, min: minCropRect, max: maxCropRect)
+        
+        return CGRect(
+            x: CGFloat(clampedCropRect.x),
+            y: CGFloat(clampedCropRect.y),
+            width: CGFloat(clampedCropRect.z),
+            height: CGFloat(clampedCropRect.w)
+        )
     }
 }

@@ -44,16 +44,16 @@ extension ModelKindDTO {
         guard let contentType = UTType(filenameExtension: fileExtension) else {
             throw DataTransferError.cannotFindContentTypeForFilenameExtension(fileExtension)
         }
-        switch contentType {
-        case .usd,
-             .usdz:
+        switch true {
+        case contentType.conforms(to: .usd),
+             contentType.conforms(to: .usdz):
             do {
                 return .realityKit(try Entity.load(contentsOf: url))
             } catch {
                 throw DataTransferError.cannotImportRealityKitEntity(error)
             }
         #if SE_SCENE_KIT
-        case .sceneKitScene:
+        case contentType.conforms(to: .sceneKitScene):
             do {
                 return .sceneKit(try SCNScene(url: url))
             } catch {

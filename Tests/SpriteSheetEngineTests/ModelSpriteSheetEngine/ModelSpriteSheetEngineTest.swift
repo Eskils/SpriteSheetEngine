@@ -109,6 +109,32 @@ struct ModelSpriteSheetEngineTests {
             try await engine.spriteSheet()
         }
     }
+    
+    @Test
+    @MainActor
+    func spriteSheetMaterialWithCroppedRegion() async throws {
+        let model = try await MainActor.run {
+            try Entity.load(contentsOf: URL(filePath: modelPath))
+        }
+        let description = SpriteSheetDescription.Model(
+            model: .realityKit(model),
+            operations: [
+                .material(ModelOperation.Material(nodeID: "Cone", color: .init(red: 0.2, green: 0.6, blue: 0.8, alpha: 1))),
+                .material(ModelOperation.Material(nodeID: "Cone", color: .init(red: 0.4, green: 0.6, blue: 0.8, alpha: 1))),
+                .material(ModelOperation.Material(nodeID: "Cone", color: .init(red: 0.6, green: 0.6, blue: 0.8, alpha: 1))),
+                .material(ModelOperation.Material(nodeID: "Cone", color: .init(red: 0.8, green: 0.6, blue: 0.8, alpha: 1)))
+            ],
+            export: ExportSettings(
+                size: CGSize(width: 64, height: 64),
+                cropRect: CGRect(x: 128, y: 0, width: 256, height: 256)
+            )
+        )
+        let engine = ModelSpriteSheetEngine(description: description)
+        
+        try await assertSnapshot(name: "model-sprite-sheet-4-material-cropped") {
+            try await engine.spriteSheet()
+        }
+    }
 }
 
 private extension ModelSpriteSheetEngineTests {
