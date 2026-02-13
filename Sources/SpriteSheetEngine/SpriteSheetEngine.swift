@@ -16,14 +16,35 @@ public struct SpriteSheetEngine<Renderer: SpriteSheetRenderer> {
     public func spriteSheet() async throws -> CGImage {
         try await renderer.setup(description: description)
         
+        let normalizedExportSettings = description.export.normalized()
+        let tileSize = normalizedExportSettings.cropRect?.size ?? normalizedExportSettings.size
+        let expectedRenderedSize = SIMD2<Double>(Double(normalizedExportSettings.size.width), Double(normalizedExportSettings.size.height))
+        
         let imageTiler = try ImageTiler(
-            tileSize: description.export.size,
+            tileSize: tileSize,
             numberOfColumns: description.numberOfColumns,
             numberOfImages: description.operations.count
         )
         
         for operation in description.operations {
-            let tile = try await renderer.makeImage(for: operation)
+            let renderedOperation = try await renderer.makeImage(for: operation)
+            let tile = {
+                guard let cropRect = normalizedExportSettings.cropRect else {
+                    return renderedOperation
+                }
+                
+                let renderedSize = SIMD2<Double>(Double(renderedOperation.width), Double(renderedOperation.height))
+                let scale = renderedSize / expectedRenderedSize
+                let scaleTransform = CGAffineTransform(scaleX: scale.x, y: scale.y)
+                let scaledCropRect = CGRect(
+                    origin: cropRect.origin.applying(scaleTransform),
+                    size: cropRect.size.applying(scaleTransform)
+                )
+                
+                // Result is `nil` if `cropRect` has zero size or is out of bounds.
+                return renderedOperation.cropping(to: scaledCropRect) ?? EmptyImage.magenta(of: normalizedExportSettings.size)
+            }()
+            
             imageTiler.append(tile: tile)
         }
         

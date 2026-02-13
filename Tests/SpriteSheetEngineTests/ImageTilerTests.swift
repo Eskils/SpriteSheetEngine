@@ -10,7 +10,7 @@ import Testing
 import CoreGraphics
 import CoreImage
 
-struct ImageTilerTests {
+struct ImageTilerTests: SnapshotAssertable {
     let testsDirectory = URL(fileURLWithPath: #filePath + "/../").standardizedFileURL.path
     
     @Test
@@ -336,23 +336,5 @@ struct ImageTilerTests {
         try assertSnapshot(name: "image tiler zero layout") {
             try imageTiler.checkedFinish()
         }
-    }
-}
-
-private extension ImageTilerTests {
-    func filePath(name: String, directory: String) -> String {
-        "\(testsDirectory)/\(directory)/\(name)"
-    }
-    
-    func assertSnapshot(name: String, for operations: () throws -> CGImage) throws {
-        let image = try operations()
-        let fileName = name.lowercased().replacingOccurrences(of: " ", with: "-")
-        #expect(
-            try isImageEqual(
-                actual: image,
-                transformed: filePath(name: "\(fileName).png", directory: "ProducedOutputs"),
-                expected: filePath(name: "\(fileName).png", directory: "ExpectedOutputs")
-            )
-        )
     }
 }

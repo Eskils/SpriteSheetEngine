@@ -11,7 +11,7 @@ import CoreGraphics
 import RealityKit
 @testable import SpriteSheetEngine
 
-struct ModelSpriteSheetEngineTests {
+struct ModelSpriteSheetEngineTests: SnapshotAssertable {
     let testsDirectory = URL(fileURLWithPath: #filePath + "/../../").standardizedFileURL.path
     private var modelPath: String {
         filePath(name: "cylinder-and-cone.usdc", directory: "TestAssets")
@@ -125,8 +125,8 @@ struct ModelSpriteSheetEngineTests {
                 .material(ModelOperation.Material(nodeID: "Cone", color: .init(red: 0.8, green: 0.6, blue: 0.8, alpha: 1)))
             ],
             export: ExportSettings(
-                size: CGSize(width: 64, height: 64),
-                cropRect: CGRect(x: 128, y: 0, width: 256, height: 256)
+                size: CGSize(width: 128, height: 128),
+                cropRect: CGRect(x: 64, y: 40, width: 64, height: 88)
             )
         )
         let engine = ModelSpriteSheetEngine(description: description)
@@ -142,22 +142,5 @@ private extension ModelSpriteSheetEngineTests {
     func load(model path: String) throws -> Entity {
         let url = URL(fileURLWithPath: path)
         return try Entity.load(contentsOf: url)
-    }
-    
-    func filePath(name: String, directory: String) -> String {
-        "\(testsDirectory)/\(directory)/\(name)"
-    }
-    
-    @MainActor
-    func assertSnapshot(name: String, for operations: () async throws -> CGImage) async throws {
-        let image = try await operations()
-        let fileName = name.lowercased().replacingOccurrences(of: " ", with: "-")
-        #expect(
-            try isImageEqual(
-                actual: image,
-                transformed: filePath(name: "\(fileName).png", directory: "ProducedOutputs"),
-                expected: filePath(name: "\(fileName).png", directory: "ExpectedOutputs")
-            )
-        )
     }
 }
