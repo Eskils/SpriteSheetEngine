@@ -12,20 +12,22 @@ import Testing
 import CoreGraphics
 
 @MainActor
-struct ModelRendererRealityKitTests {
+struct ModelRendererRealityKitTests: SnapshotAssertable {
     let testsDirectory = URL(fileURLWithPath: #filePath + "/../../../").standardizedFileURL.path
     private var modelPath: String {
         filePath(name: "cylinder-and-cone.usdc", directory: "TestAssets")
     }
     
-    let rendererSize = CGSize(width: 256, height: 256)
+    static let rendererSize = CGSize(width: 256, height: 256)
+    
+    let renderer = RealityKitModelRenderer(size: Self.rendererSize)
     
     @Test
     @MainActor
     func rendersModelWithNoOperations() async throws {
-        try await assertSnapshot(name: "No operations") { renderer in
+        try await assertSnapshot(name: "No operations") {
             try await renderer.configure(camera: CameraSettings())
-            renderer.add(model: try load(model: modelPath))
+            await renderer.add(model: try load(model: modelPath))
             return try await renderer.perform(operation: .none)
         }
     }
@@ -33,9 +35,9 @@ struct ModelRendererRealityKitTests {
     @Test
     @MainActor
     func rendersModelWithMaterialOperation() async throws {
-        try await assertSnapshot(name: "Material operation") { renderer in
+        try await assertSnapshot(name: "Material operation") {
             try await renderer.configure(camera: CameraSettings())
-            renderer.add(model: try load(model: modelPath))
+            await renderer.add(model: try load(model: modelPath))
             return try await renderer.perform(
                 operation: .material(
                     ModelOperation.Material(
@@ -50,9 +52,9 @@ struct ModelRendererRealityKitTests {
     @Test
     @MainActor
     func rendersModelWithTransformOperation() async throws {
-        try await assertSnapshot(name: "Transform operation") { renderer in
+        try await assertSnapshot(name: "Transform operation") {
             try await renderer.configure(camera: CameraSettings())
-            renderer.add(model: try load(model: modelPath))
+            await renderer.add(model: try load(model: modelPath))
             return try await renderer.perform(
                 operation: .transform(
                     ModelOperation.Transform(
@@ -73,7 +75,7 @@ struct ModelRendererRealityKitTests {
     @Test
     @MainActor
     func appliesCameraTransform() async throws {
-        try await assertSnapshot(name: "Camera transform") { renderer in
+        try await assertSnapshot(name: "Camera transform") {
             let cameraSettings = CameraSettings(
                 transform: simd_float4x4(rows: [
                     SIMD4(1, 0, 0, 0),
@@ -83,7 +85,7 @@ struct ModelRendererRealityKitTests {
                 ])
             )
             try await renderer.configure(camera: cameraSettings)
-            renderer.add(model: try load(model: modelPath))
+            await renderer.add(model: try load(model: modelPath))
             return try await renderer.perform(operation: .none)
         }
     }
@@ -91,7 +93,7 @@ struct ModelRendererRealityKitTests {
     @Test
     @MainActor
     func usesLatestCameraSetting() async throws {
-        let renderer = RealityKitModelRenderer(size: rendererSize)
+        let renderer = RealityKitModelRenderer(size: Self.rendererSize)
         let firstCameraSettings = CameraSettings(
             transform: simd_float4x4(rows: [
                 SIMD4(1, 0, 0, 0),
@@ -118,12 +120,12 @@ struct ModelRendererRealityKitTests {
     @Test
     @MainActor
     func appliesOrthographicCameraProjection() async throws {
-        try await assertSnapshot(name: "Orthographic camera projection") { renderer in
+        try await assertSnapshot(name: "Orthographic camera projection") {
             let cameraSettings = CameraSettings(
                 projection: .orthographic
             )
             try await renderer.configure(camera: cameraSettings)
-            renderer.add(model: try load(model: modelPath))
+            await renderer.add(model: try load(model: modelPath))
             return try await renderer.perform(operation: .none)
         }
     }
@@ -131,12 +133,12 @@ struct ModelRendererRealityKitTests {
     @Test
     @MainActor
     func appliesCameraBackground() async throws {
-        try await assertSnapshot(name: "Camera background") { renderer in
+        try await assertSnapshot(name: "Camera background") {
             let cameraSettings = CameraSettings(
                 background: .color(.init(red: 0.4, green: 0.2, blue: 0.8, alpha: 1.0))
             )
             try await renderer.configure(camera: cameraSettings)
-            renderer.add(model: try load(model: modelPath))
+            await renderer.add(model: try load(model: modelPath))
             return try await renderer.perform(operation: .none)
         }
     }
@@ -147,23 +149,5 @@ private extension ModelRendererRealityKitTests {
     func load(model path: String) throws -> Entity {
         let url = URL(fileURLWithPath: path)
         return try Entity.load(contentsOf: url)
-    }
-    
-    func filePath(name: String, directory: String) -> String {
-        "\(testsDirectory)/\(directory)/\(name)"
-    }
-    
-    @MainActor
-    func assertSnapshot(name: String, for operations: (RealityKitModelRenderer) async throws -> CGImage) async throws {
-        let renderer = RealityKitModelRenderer(size: rendererSize)
-        let image = try await operations(renderer)
-        let fileName = name.lowercased().replacingOccurrences(of: " ", with: "-")
-        #expect(
-            try isImageEqual(
-                actual: image,
-                transformed: filePath(name: "\(fileName).png", directory: "ProducedOutputs"),
-                expected: filePath(name: "\(fileName).png", directory: "ExpectedOutputs")
-            )
-        )
     }
 }

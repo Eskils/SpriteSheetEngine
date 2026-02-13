@@ -11,7 +11,7 @@ import CoreGraphics
 import RealityKit
 @testable import SpriteSheetEngine
 
-struct ModelSpriteSheetEngineTests {
+struct ModelSpriteSheetEngineTests: SnapshotAssertable {
     let testsDirectory = URL(fileURLWithPath: #filePath + "/../../").standardizedFileURL.path
     private var modelPath: String {
         filePath(name: "cylinder-and-cone.usdc", directory: "TestAssets")
@@ -142,22 +142,5 @@ private extension ModelSpriteSheetEngineTests {
     func load(model path: String) throws -> Entity {
         let url = URL(fileURLWithPath: path)
         return try Entity.load(contentsOf: url)
-    }
-    
-    func filePath(name: String, directory: String) -> String {
-        "\(testsDirectory)/\(directory)/\(name)"
-    }
-    
-    @MainActor
-    func assertSnapshot(name: String, for operations: () async throws -> CGImage) async throws {
-        let image = try await operations()
-        let fileName = name.lowercased().replacingOccurrences(of: " ", with: "-")
-        #expect(
-            try isImageEqual(
-                actual: image,
-                transformed: filePath(name: "\(fileName).png", directory: "ProducedOutputs"),
-                expected: filePath(name: "\(fileName).png", directory: "ExpectedOutputs")
-            )
-        )
     }
 }
